@@ -13,17 +13,19 @@ function execute(url) {
     var chapters = [];
     var seen = {};
 
-    doc.select(".list-chapter li a").forEach(function (el) {
-        var name = el.text().trim() + "";
-        var chapUrl = (el.attr("href") || "") + "";
+    doc.select("li[onclick*='noidung1']").forEach(function (el) {
+        var name = el.select("a").text().trim() + "";
+        var onclickText = el.attr("onclick") + "";
+        
+        var match = onclickText.match(/noidung1\('([^']+)'\)/);
+        if (!match) return;
+        var query = match[1].replace(/&amp;/g, "&"); // Clean up HTML entities
+        
+        var chapUrl = BASE_URL + "/truyen/chuonghoi_moi.aspx?" + query;
 
         if (!name || !chapUrl) return;
         if (seen[chapUrl]) return;
         seen[chapUrl] = true;
-
-        if (chapUrl.indexOf("http") !== 0) {
-            chapUrl = chapUrl.indexOf("/") === 0 ? BASE_URL + chapUrl : BASE_URL + "/" + chapUrl;
-        }
 
         chapters.push({
             name: name,
