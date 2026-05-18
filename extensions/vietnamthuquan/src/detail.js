@@ -5,7 +5,7 @@ load("config.js");
 function execute(url) {
     url = url.replace(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/img, BASE_URL);
 
-    var res = fetch(url);
+    var res = fetchBook(url);
     if (!res.ok) return Response.error("Cannot load: " + res.status);
 
     var doc = res.html();
@@ -22,7 +22,7 @@ function execute(url) {
     var tuaId = tuaIdMatch ? tuaIdMatch[1] : "";
     
     if (tuaId) {
-        var resAjax = fetch(BASE_URL + "/truyen/chuonghoi_moi.aspx", {
+        var resAjax = fetchBook(BASE_URL + "/truyen/chuonghoi_moi.aspx", {
             method: "POST",
             body: "tuaid=" + tuaId + "&chuongid=",
             headers: {
