@@ -8,7 +8,7 @@ function execute(url) {
         query = url.substring(url.indexOf("?") + 1);
     }
 
-    var res = fetch(BASE_URL + "/truyen/chuonghoi_moi.aspx", {
+    var res = fetchBook(BASE_URL + "/truyen/chuonghoi_moi.aspx", {
         method: "POST",
         body: query,
         headers: {
