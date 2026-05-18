@@ -6,7 +6,7 @@
     "source": "http://vietnamthuquan.eu",
     "regexp": "https?:\\/\\/(?:www\\.)?vietnamthuquan\\\\.eu\\/[^/]+\\/?$",
     "description": "Extension cho Thư viện Online",
-    "locale": "en_US",
+    "locale": "vi_VN",
     "language": "javascript",
     "type": "novel"
   },
