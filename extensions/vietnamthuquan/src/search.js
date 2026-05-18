@@ -10,7 +10,7 @@ function execute(key, page) {
         searchUrl = searchUrl + "&page=" + page;
     }
 
-    var res = fetch(searchUrl);
+    var res = fetchBook(searchUrl);
     if (!res.ok) return Response.error("Cannot search: " + res.status);
 
     var doc = res.html();
