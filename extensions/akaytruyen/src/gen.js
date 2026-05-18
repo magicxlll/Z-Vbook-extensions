@@ -17,9 +17,14 @@ function execute(url, page) {
     var doc = res.html();
     var list = [];
 
-    doc.select(".list-truyen .row").forEach(function (el) {
-        var name = el.select("h3 a").text() + "";
-        var link = (el.select("h3 a").attr("href") || "") + "";
+    var containers = doc.select(".story-item");
+    if (containers.size() === 0) {
+        containers = doc.select(".list-truyen .row");
+    }
+
+    containers.forEach(function (el) {
+        var name = (el.select(".story-name").text() || el.select("h3 a").text() || el.select("h3").text() || "") + "";
+        var link = (el.select("a").first().attr("href") || el.select("h3 a").attr("href") || "") + "";
         var cover = (el.select("img").attr("src") || el.select("img").attr("data-src") || "") + "";
 
         if (!name || !link) return;
@@ -41,7 +46,7 @@ function execute(url, page) {
 
     // Kiểm tra trang tiếp theo
     var nextPage = null;
-    var nextEl = doc.select(".pagination li.active + li a").first();
+    var nextEl = doc.select(".pagination li.active + li a").first() || doc.select(".pagination-btn.pagination-active + .pagination-btn").first();
     if (nextEl) {
         nextPage = String(parseInt(page) + 1);
     }
