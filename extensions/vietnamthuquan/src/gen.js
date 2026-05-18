@@ -17,18 +17,14 @@ function execute(url, page) {
     var doc = res.html();
     var list = [];
 
-    doc.select(".list-truyen .row").forEach(function (el) {
-        var name = el.select("h3 a").text() + "";
-        var link = (el.select("h3 a").attr("href") || "") + "";
-        var cover = (el.select("img").attr("src") || el.select("img").attr("data-src") || "") + "";
+    doc.select("li.menutruyen a[href*='truyen.aspx?tid=']").forEach(function (el) {
+        var name = el.text().trim() + "";
+        var link = (el.attr("href") || "") + "";
+        var cover = ""; // VietnamThuQuan doesn't have covers
 
         if (!name || !link) return;
         if (link.indexOf("http") !== 0) {
             link = link.indexOf("/") === 0 ? BASE_URL + link : BASE_URL + "/" + link;
-        }
-        if (cover && cover.indexOf("http") !== 0) {
-            if (cover.indexOf("//") === 0) cover = "https:" + cover;
-            else cover = BASE_URL + cover;
         }
 
         list.push({
