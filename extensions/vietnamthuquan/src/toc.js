@@ -6,7 +6,7 @@ function execute(url) {
     url = url.replace(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/img, BASE_URL);
     if (url.slice(-1) === "/") url = url.slice(0, -1);
 
-    var res = fetch(url);
+    var res = fetchBook(url);
     if (!res.ok) return Response.error("Cannot load: " + res.status);
 
     var doc = res.html();
