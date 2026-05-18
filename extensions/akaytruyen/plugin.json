@@ -6,7 +6,7 @@
     "source": "https://akaytruyen.com",
     "regexp": "https?:\\/\\/(?:www\\.)?akaytruyen\\\\.com\\/[^/]+\\/?$",
     "description": "Extension cho AkayTruyen",
-    "locale": "en_US",
+    "locale": "vi_VN",
     "language": "javascript",
     "type": "novel"
   },
