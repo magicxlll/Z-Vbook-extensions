@@ -13,8 +13,12 @@ function execute(url) {
     var chapters = [];
     var seen = {};
 
-    doc.select(".list-chapter li a").forEach(function (el) {
-        var name = el.text().trim() + "";
+    doc.select("a[href*='/chuong-']").forEach(function (el) {
+        var name = el.text().replace(/\s+/g, " ").trim() + "";
+        
+        // Loại bỏ phần thông tin ngày đăng phía trước ví dụ "23 T2 "
+        name = name.replace(/^\d+\s+T\d+\s+/, "").trim();
+        
         var chapUrl = (el.attr("href") || "") + "";
 
         if (!name || !chapUrl) return;
@@ -33,5 +37,9 @@ function execute(url) {
     });
 
     if (chapters.length === 0) return Response.error("No chapters found");
+    
+    // Đảo ngược mảng vì AkayTruyen để chương mới nhất lên đầu tiên
+    chapters.reverse();
+    
     return Response.success(chapters);
 }
