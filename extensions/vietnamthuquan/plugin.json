@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "name": "Thư viện Online",
+    "author": "Zitzz",
+    "version": 1,
+    "source": "http://vietnamthuquan.eu",
+    "regexp": "https?:\\/\\/(?:www\\.)?vietnamthuquan\\\\.eu\\/[^/]+\\/?$",
+    "description": "Extension cho Thư viện Online",
+    "locale": "en_US",
+    "language": "javascript",
+    "type": "novel"
+  },
+  "script": {
+    "home": "home.js",
+    "detail": "detail.js",
+    "search": "search.js",
+    "page": "page.js",
+    "toc": "toc.js",
+    "chap": "chap.js"
+  }
+}
