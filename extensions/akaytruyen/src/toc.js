@@ -12,29 +12,56 @@ function execute(url) {
     var doc = res.html();
     var chapters = [];
     var seen = {};
+    var page = 1;
+    var hasMore = true;
 
-    doc.select("a[href*='/chuong-']").forEach(function (el) {
-        var name = el.text().replace(/\s+/g, " ").trim() + "";
-        
-        // Loại bỏ phần thông tin ngày đăng phía trước ví dụ "23 T2 "
-        name = name.replace(/^\d+\s+T\d+\s+/, "").trim();
-        
-        var chapUrl = (el.attr("href") || "") + "";
+    while (hasMore) {
+        var fetchUrl = url + "?page=" + page;
+        var res = fetch(fetchUrl);
+        if (!res.ok) break;
 
-        if (!name || !chapUrl) return;
-        if (seen[chapUrl]) return;
-        seen[chapUrl] = true;
-
-        if (chapUrl.indexOf("http") !== 0) {
-            chapUrl = chapUrl.indexOf("/") === 0 ? BASE_URL + chapUrl : BASE_URL + "/" + chapUrl;
+        var doc = res.html();
+        var pageChapters = doc.select("a[href*='/chuong-']");
+        if (pageChapters.size() === 0) {
+            break;
         }
 
-        chapters.push({
-            name: name,
-            url: chapUrl,
-            host: BASE_URL
+        var addedInPage = 0;
+        pageChapters.forEach(function (el) {
+            var name = el.text().replace(/\s+/g, " ").trim() + "";
+            
+            // Loại bỏ phần thông tin ngày đăng phía trước ví dụ "23 T2 "
+            name = name.replace(/^\d+\s+T\d+\s+/, "").trim();
+            
+            var chapUrl = (el.attr("href") || "") + "";
+
+            if (!name || !chapUrl) return;
+            if (seen[chapUrl]) return;
+            seen[chapUrl] = true;
+
+            if (chapUrl.indexOf("http") !== 0) {
+                chapUrl = chapUrl.indexOf("/") === 0 ? BASE_URL + chapUrl : BASE_URL + "/" + chapUrl;
+            }
+
+            chapters.push({
+                name: name,
+                url: chapUrl,
+                host: BASE_URL
+            });
+            addedInPage++;
         });
-    });
+
+        if (addedInPage === 0) {
+            hasMore = false;
+        } else {
+            page++;
+        }
+
+        // Giới hạn an toàn tối đa 150 trang (tương đương 15,000 chương) để tránh loop vô tận
+        if (page > 150) {
+            break;
+        }
+    }
 
     if (chapters.length === 0) return Response.error("No chapters found");
     
