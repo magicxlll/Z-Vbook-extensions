@@ -6,10 +6,6 @@ function execute(url) {
     url = url.replace(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/img, BASE_URL);
     if (url.slice(-1) === "/") url = url.slice(0, -1);
 
-    var res = fetch(url);
-    if (!res.ok) return Response.error("Cannot load: " + res.status);
-
-    var doc = res.html();
     var chapters = [];
     var seen = {};
     var page = 1;
@@ -21,17 +17,30 @@ function execute(url) {
         if (!res.ok) break;
 
         var doc = res.html();
-        var pageChapters = doc.select("a[href*='/chuong-']");
+        
+        // Select mobile chapter cards/links
+        var pageChapters = doc.select("a.chapter-link-mobile");
+        if (pageChapters.size() === 0) {
+            // Fallback to desktop link selector
+            pageChapters = doc.select(".story-detail__list-chapter--list a");
+        }
+        
         if (pageChapters.size() === 0) {
             break;
         }
 
         var addedInPage = 0;
         pageChapters.forEach(function (el) {
-            var name = el.text().replace(/\s+/g, " ").trim() + "";
+            var number = el.select(".chapter-number").text().trim();
+            var title = el.select(".chapter-title").text().trim();
+            var name = "";
             
-            // Loại bỏ phần thông tin ngày đăng phía trước ví dụ "23 T2 "
-            name = name.replace(/^\d+\s+T\d+\s+/, "").trim();
+            if (number || title) {
+                name = number ? (number + ": " + title) : title;
+            } else {
+                name = el.text().replace(/\s+/g, " ").trim();
+                name = name.replace(/^\d+\s+T\d+\s+/, "").trim();
+            }
             
             var chapUrl = (el.attr("href") || "") + "";
 
