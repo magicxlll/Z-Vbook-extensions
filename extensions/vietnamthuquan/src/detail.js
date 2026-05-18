@@ -11,7 +11,7 @@ function execute(url) {
     var doc = res.html();
 
     // Tên truyện từ title của trang
-    var name = doc.title().replace("Mời đọc tác phẩm:", "").split(",")[0].trim() + "";
+    var name = doc.select("title").text().replace("Mời đọc tác phẩm:", "").split(",")[0].trim() + "";
 
     // Ảnh bìa - VietnamThuQuan không có ảnh bìa
     var cover = "";
