@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "name": "Web đọc truyện Online lớn nhất Việt Nam",
+    "author": "VBook UserTest User",
+    "version": 1,
+    "source": "https://truyenfull.vision",
+    "regexp": "https?:\\/\\/(?:www\\.)?truyenfull\\\\.vision\\/[^/]+\\/?$",
+    "description": "Extension cho Web đọc truyện Online lớn nhất Việt Nam",
+    "locale": "vi_VN",
+    "language": "javascript",
+    "type": "novel"
+  },
+  "script": {
+    "home": "home.js",
+    "detail": "detail.js",
+    "search": "search.js",
+    "page": "page.js",
+    "toc": "toc.js",
+    "chap": "chap.js"
+  }
+}
