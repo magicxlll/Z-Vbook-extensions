@@ -4,7 +4,7 @@
     "author": "Zitzz",
     "version": 1,
     "source": "https://akaytruyen.com",
-    "regexp": "https?:\\/\\/(?:www\\.)?akaytruyen\\\\.com\\/[^/]+\\/?$",
+    "regexp": "(www\\.)?akaytruyen\\.com/truyen/[0-9a-zA-Z-]+(/.*)?$",
     "description": "Extension cho AkayTruyen",
     "locale": "vi_VN",
     "language": "javascript",
