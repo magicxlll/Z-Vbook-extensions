@@ -3,32 +3,40 @@
 load("config.js");
 
 function execute(key, page) {
-    page = page !== undefined ? page : "1";
-
-    var searchUrl = BASE_URL + "/tim-kiem/?tukhoa=" + encodeURIComponent(key);
-    if (page !== "1") {
-        searchUrl = searchUrl + "&page=" + page;
-    }
-
-    var res = fetchBook(searchUrl);
+    // VietnamThuQuan là website cũ, tìm kiếm qua AJAX POST
+    var searchUrl = BASE_URL + "/truyen/timkiem_trangchinh.aspx";
+    
+    // Tạo tham số POST
+    var body = "theo=tua&chu=" + encodeURIComponent(key);
+    
+    var res = fetchBook(searchUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: body
+    });
+    
     if (!res.ok) return Response.error("Cannot search: " + res.status);
 
     var doc = res.html();
     var list = [];
+    var seen = {};
 
-    doc.select(".list-truyen .row").forEach(function (el) {
-        var name = el.select("h3 a").text() + "";
-        var link = (el.select("h3 a").attr("href") || "") + "";
-        var cover = (el.select("img").attr("src") || el.select("img").attr("data-src") || "") + "";
+    doc.select("span.viethoachu a[href*='truyen.aspx?tid=']").forEach(function (el) {
+        var name = el.text().trim() + "";
+        var link = (el.attr("href") || "") + "";
 
         if (!name || !link) return;
+        if (seen[link]) return;
+        seen[link] = true;
+
         if (link.indexOf("http") !== 0) {
             link = link.indexOf("/") === 0 ? BASE_URL + link : BASE_URL + "/" + link;
         }
-        if (cover && cover.indexOf("http") !== 0) {
-            if (cover.indexOf("//") === 0) cover = "https:" + cover;
-            else cover = BASE_URL + cover;
-        }
+
+        // Tạo ảnh đại diện giả lập (Favicon hoặc ảnh chung) do web không trả về ảnh trong danh sách tìm kiếm
+        var cover = BASE_URL + "/favicon.ico";
 
         list.push({
             name: name,
@@ -38,11 +46,6 @@ function execute(key, page) {
         });
     });
 
-    var nextPage = null;
-    var nextEl = doc.select(".pagination li.active + li a").first();
-    if (nextEl) {
-        nextPage = String(parseInt(page) + 1);
-    }
-
-    return Response.success(list, nextPage);
+    // Web trả về toàn bộ kết quả trên một trang duy nhất, không có phân trang
+    return Response.success(list, null);
 }
