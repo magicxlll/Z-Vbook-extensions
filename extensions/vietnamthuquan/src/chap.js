@@ -3,24 +3,31 @@
 load("config.js");
 
 function execute(url) {
-    url = url.replace(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/img, BASE_URL);
+    var query = "";
+    if (url.indexOf("?") > -1) {
+        query = url.substring(url.indexOf("?") + 1);
+    }
 
-    var res = fetch(url);
+    var res = fetch(BASE_URL + "/truyen/chuonghoi_moi.aspx", {
+        method: "POST",
+        body: query,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+    });
+
     if (!res.ok) return Response.error("Cannot load: " + res.status);
 
-    var doc = res.html();
+    var text = res.text() + "";
+    var parts = text.split("--!!tach_noi_dung!!--");
+    if (parts.length > 2) {
+        var content = parts[2].trim();
+        
+        // Dọn dẹp sơ bộ
+        content = content.replace(/&nbsp;/g, " ");
+        
+        return Response.success(content);
+    }
 
-    // Xóa quảng cáo và phần thừa
-    doc.select("script, style, ins, iframe, noscript").remove();
-    doc.select(".ads, .advertisement, .banner, [class*='ads'], [id*='ads']").remove();
-    doc.select("a").remove();
-
-    // Lấy nội dung chương
-    var contentEl = doc.select("#chapter-content").first();
-    if (!contentEl) return Response.error("No content found");
-
-    var content = contentEl.html() + "";
-    content = content.replace(/&nbsp;/g, " ");
-
-    return Response.success(content);
+    return Response.error("No content found");
 }
