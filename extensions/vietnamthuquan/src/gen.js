@@ -11,7 +11,7 @@ function execute(url, page) {
         fetchUrl = url + (url.indexOf("?") > -1 ? "&" : "?") + "page=" + page;
     }
 
-    var res = fetch(fetchUrl);
+    var res = fetchBook(fetchUrl);
     if (!res.ok) return Response.error("Cannot load: " + res.status);
 
     var doc = res.html();
