@@ -11,24 +11,27 @@ function execute(url) {
     var doc = res.html();
 
     // Tên truyện
-    var nameEl = doc.select("h1").first();
+    var nameEl = doc.select("h3.story-name").first() || doc.select("h1").first();
     var name = (nameEl ? nameEl.text() : "") + "";
 
     // Ảnh bìa
-    var coverEl = doc.select("__og_image__").first();
+    var coverEl = doc.select("meta[property='og:image']").first() || doc.select(".story-detail__top img").first();
     var cover = "";
     if (coverEl) {
-        cover = (coverEl.attr("data-src") || coverEl.attr("src") || "") + "";
+        cover = (coverEl.attr("content") || coverEl.attr("src") || "") + "";
         if (cover.indexOf("//") === 0) cover = "https:" + cover;
         if (cover && cover.indexOf("http") !== 0) cover = BASE_URL + cover;
     }
 
     // Tác giả
-    var authorEl = doc.select("[itemprop='author']").first();
-    var author = (authorEl ? authorEl.text() : "") + "";
+    var authorEl = doc.select("p:contains('Tác giả')").first() || doc.select("[itemprop='author']").first();
+    var author = "";
+    if (authorEl) {
+        author = authorEl.text().replace("Tác giả:", "").trim();
+    }
 
     // Trạng thái
-    var statusEl = doc.select(".info div:contains('Trạng thái')").first();
+    var statusEl = doc.select("p:contains('Trạng thái')").first() || doc.select(".info div:contains('Trạng thái')").first();
     var status = (statusEl ? statusEl.text() : "") + "";
     var ongoing = status.indexOf("Hoàn") === -1
         && status.indexOf("Completed") === -1
@@ -36,13 +39,13 @@ function execute(url) {
         && status.indexOf("完结") === -1;
 
     // Mô tả
-    var descEl = doc.select(".desc-text").first();
+    var descEl = doc.select(".story-detail__top--desc").first() || doc.select(".desc-text").first();
     var description = (descEl ? descEl.html() : "") + "";
 
     // Thể loại
     var genres = [];
-    doc.select(".info a[href*='the-loai']").forEach(function (el) {
-        var gTitle = el.text() + "";
+    doc.select("a[href*='/the-loai/']").forEach(function (el) {
+        var gTitle = el.text().replace(/[❖\n,]/g, "").trim() + "";
         var gHref = (el.attr("href") || "") + "";
         if (!gTitle || !gHref) return;
         if (gHref.indexOf("http") !== 0) gHref = BASE_URL + gHref;
