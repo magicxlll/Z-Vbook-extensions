@@ -5,17 +5,6 @@
   },
   "data": [
     {
-      "name": "Thư viện Online",
-      "author": "Zitzz",
-      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/vietnamthuquan/plugin.zip",
-      "version": 1,
-      "source": "http://vietnamthuquan.eu",
-      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/vietnamthuquan/icon.png",
-      "description": "Extension cho Thư viện Online",
-      "type": "novel",
-      "locale": "en_US"
-    },
-    {
       "name": "AkayTruyen",
       "author": "Zitzz",
       "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/akaytruyen/plugin.zip",
@@ -24,7 +13,29 @@
       "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/akaytruyen/icon.png",
       "description": "Extension cho AkayTruyen",
       "type": "novel",
-      "locale": "en_US"
+      "locale": "vi_VN"
+    },
+    {
+      "name": "Web đọc truyện Online lớn nhất Việt Nam",
+      "author": "VBook UserTest User",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/truyenfull/plugin.zip",
+      "version": 1,
+      "source": "https://truyenfull.vision",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/truyenfull/icon.png",
+      "description": "Extension cho Web đọc truyện Online lớn nhất Việt Nam",
+      "type": "novel",
+      "locale": "vi_VN"
+    },
+    {
+      "name": "Thư viện Online",
+      "author": "Zitzz",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/vietnamthuquan/plugin.zip",
+      "version": 1,
+      "source": "http://vietnamthuquan.eu",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/vietnamthuquan/icon.png",
+      "description": "Extension cho Thư viện Online",
+      "type": "novel",
+      "locale": "vi_VN"
     }
   ]
 }
