@@ -1,14 +1,13 @@
-// gen.js — Parser danh sách truyện
+// gen.js — Parser danh sách truyện theo danh mục và phân trang
 // Contract: execute(url, page) → [{ name, link, cover, host, description }], nextPage
 load("config.js");
 
 function execute(url, page) {
     page = page !== undefined ? page : "1";
 
-    // Nếu URL là link phân trang, thêm page param
     var fetchUrl = url;
     if (page !== "1") {
-        fetchUrl = url + (url.indexOf("?") > -1 ? "&" : "?") + "page=" + page;
+        fetchUrl = url + (url.indexOf("?") > -1 ? "&" : "?") + "tranghientai=" + page;
     }
 
     var res = fetchBook(fetchUrl);
@@ -16,16 +15,21 @@ function execute(url, page) {
 
     var doc = res.html();
     var list = [];
+    var seen = {};
 
-    doc.select("li.menutruyen a[href*='truyen.aspx?tid=']").forEach(function (el) {
+    doc.select("span.viethoachu a[href*='truyen.aspx?tid=']").forEach(function (el) {
         var name = el.text().trim() + "";
         var link = (el.attr("href") || "") + "";
-        var cover = ""; // VietnamThuQuan doesn't have covers
 
         if (!name || !link) return;
+        if (seen[link]) return;
+        seen[link] = true;
+
         if (link.indexOf("http") !== 0) {
             link = link.indexOf("/") === 0 ? BASE_URL + link : BASE_URL + "/" + link;
         }
+
+        var cover = BASE_URL + "/favicon.ico"; // placeholder
 
         list.push({
             name: name,
@@ -35,10 +39,10 @@ function execute(url, page) {
         });
     });
 
-    // Kiểm tra trang tiếp theo
+    // Quyết định trang tiếp theo
     var nextPage = null;
-    var nextEl = doc.select(".pagination li.active + li a").first();
-    if (nextEl) {
+    // Nếu trang hiện tại có đủ 20 truyện (đặc trưng số truyện tối đa/trang của vietnamthuquan), cho phép tải trang tiếp theo
+    if (list.length >= 20) {
         nextPage = String(parseInt(page) + 1);
     }
 
