@@ -4,7 +4,7 @@
     "author": "Zitzz",
     "version": 1,
     "source": "http://vietnamthuquan.eu",
-    "regexp": "https?:\\/\\/(?:www\\.)?vietnamthuquan\\\\.eu\\/[^/]+\\/?$",
+    "regexp": "(www\\.)?vietnamthuquan\\.eu/truyen/truyen\\.aspx\\?tid=[a-zA-Z0-9]+",
     "description": "Extension cho Thư viện Online",
     "locale": "vi_VN",
     "language": "javascript",
