@@ -1,45 +1,36 @@
 load("config.js");
 
-function extractChapterNumber(name) {
-    var m = (name + "").match(/(?:chương|chap|chapter|\b)\s*(\d+)/i);
-    return m ? parseInt(m[1], 10) : 0;
-}
-
 function execute(url) {
-    url = url.replace(/^(?:https?://)?(?:[^@\n]+@)?(?:www.)?([^:\/\n?]+)/img, BASE_URL);
+    url = url.replace(/^(?:https?://)?(?:[^@
+]+@)?(?:www.)?([^:/
+?]+)/img, BASE_URL);
 
     var res = fetchBook(url);
     if (!res.ok) return Response.error("Cannot load: " + res.status);
 
-    var doc = res.html();
+    var html = res.text();
+
+    var mSlug = html.match(/canonical"s+href="https://vireal.vn//story/([^"]+)"/) || html.match(/\"slug\":\"([^\"]+)\"/);
+    var storySlug = mSlug ? mSlug[1] : url.split("/story/")[1].split("/")[0].split("?")[0];
+
     var chapters = [];
     var seen = {};
 
-    doc.select("a[href*='/chapter/'], a[href*='/read/']").forEach(function (el) {
-        var name = (el.text() || "").trim();
-        var href = (el.attr("href") || "") + "";
+    var chapRegex = /\"id\":\"(\d+)\",\"name\":\"([^\"]+)\",\"slug\":\"([^\"]+)\"/g;
+    var match;
+    while ((match = chapRegex.exec(html)) !== null) {
+        var chapName = match[2];
+        var chapSlug = match[3];
+        var chapUrl = BASE_URL + "/story/" + storySlug + "/" + chapSlug;
+        if (!seen[chapUrl]) {
+            seen[chapUrl] = true;
+            chapters.push({
+                name: chapName,
+                url: chapUrl,
+                host: BASE_URL
+            });
+        }
+    }
 
-        if (!name || !href) return;
-        var chapUrl = href.indexOf("http") === 0 ? href : BASE_URL + href;
-        if (seen[chapUrl]) return;
-        seen[chapUrl] = true;
-
-        chapters.push({
-            name: name,
-            url: chapUrl,
-            host: BASE_URL,
-            num: extractChapterNumber(name)
-        });
-    });
-
-    chapters.sort(function (a, b) {
-        if (a.num !== 0 && b.num !== 0) return a.num - b.num;
-        return 0;
-    });
-
-    var cleanChapters = chapters.map(function (c) {
-        return { name: c.name, url: c.url, host: c.host };
-    });
-
-    return Response.success(cleanChapters);
+    return Response.success(chapters);
 }
