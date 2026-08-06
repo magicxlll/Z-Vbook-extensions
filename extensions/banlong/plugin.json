@@ -2,11 +2,11 @@
   "metadata": {
     "name": "Bàn Long",
     "author": "vBook",
-    "version": 7,
+    "version": 10,
     "source": "https://blhvip.vn",
-    "regexp": "(www.)?(banlong.vip|blhvip.vn)/truyen/[0-9a-z-]+/?",
+    "regexp": "https?:\\/\\/(?:www\\.)?(?:banlong\\.vip|blhvip\\.vn)\\/",
     "description": "Đọc truyện trên banlong.us",
-    "locale": "vi-VN",
+    "locale": "vi_VN",
     "language": "javascript",
     "type": "novel"
   },
