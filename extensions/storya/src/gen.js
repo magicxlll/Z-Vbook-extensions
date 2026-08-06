@@ -12,29 +12,35 @@ function execute(url, page) {
 
     var doc = res.html();
     var list = [];
+    var seen = {};
 
     doc.select("a[href^='/truyen/']").forEach(function (el) {
         var href = (el.attr("href") || "") + "";
         if (!href || href === "/truyen/") return;
+        var parts = href.split("/");
+        var slug = parts[parts.length - 1] || parts[parts.length - 2];
+        if (!slug) return;
+
+        var link = BASE_URL + "/truyen/" + slug;
+        if (seen[link]) return;
+        seen[link] = true;
+
         var name = (el.select("h3, h2").text() || el.text() || "").trim();
         if (!name) return;
 
-        var link = href.indexOf("http") === 0 ? href : BASE_URL + href;
-        var cover = "";
-        var img = el.select("img").first();
-        if (img) cover = (img.attr("src") || img.attr("srcset") || img.attr("data-src") || "") + "";
+        var cover = BASE_URL + "/media/covers/" + slug + ".jpg";
 
         list.push({
             name: name,
             link: link,
-            cover: fixCover(cover),
+            cover: cover,
             host: BASE_URL
         });
     });
 
     var nextPage = null;
     var nextBtn = doc.select("a[href*='page=']").last();
-    if (nextBtn) nextPage = String(parseInt(page) + 1);
+    if (nextBtn) nextPage = String(parseInt(page, 10) + 1);
 
     return Response.success(list, nextPage);
 }
