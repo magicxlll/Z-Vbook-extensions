@@ -13,7 +13,7 @@ function execute(url) {
     doc.select("script, style, ins, iframe, noscript").remove();
     doc.select(".ads, .banner, [class*='ads']").remove();
 
-    var contentEl = doc.select(".chapter-content, .content, article, main").first();
+    var contentEl = doc.select("#reading-content, .transition-all.duration-200.font-sans, .chapter-content, article, main").first();
     if (!contentEl) return Response.error("Không tìm thấy nội dung chương");
 
     var content = contentEl.html() + "";
