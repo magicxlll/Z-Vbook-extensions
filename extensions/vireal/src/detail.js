@@ -11,18 +11,18 @@ function execute(url) {
 
     var name = (doc.select("meta[property='og:title']").attr("content") || "").replace(/ - Đọc truyện online.*$/i, "").trim();
     if (!name) {
-        var mName = html.match(/\"name\":\"([^\"]+)\"/);
+        var mName = html.match(/"name"s*:s*"([^"]+)"/) || html.match(/\"name\":\"([^\"]+)\"/);
         if (mName) name = mName[1];
     }
 
     var cover = doc.select("meta[property='og:image']").attr("content") || "";
     if (!cover) {
-        var mCover = html.match(/\"thumbnail\":\"([^\"]+)\"/);
+        var mCover = html.match(/"thumbnail"s*:s*"([^"]+)"/) || html.match(/\"thumbnail\":\"([^\"]+)\"/);
         if (mCover) cover = mCover[1];
     }
 
     var author = "";
-    var mAuthor = html.match(/\"author\":\"([^\"]+)\"/);
+    var mAuthor = html.match(/"author"s*:s*"([^"]+)"/) || html.match(/\"author\":\"([^\"]+)\"/);
     if (mAuthor) author = mAuthor[1];
 
     var description = doc.select("meta[property='og:description']").attr("content") || "";
