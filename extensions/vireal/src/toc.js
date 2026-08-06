@@ -16,11 +16,11 @@ function execute(url) {
     var chapters = [];
     var seen = {};
 
-    var chapBlocks = html.split(/\{\"author\":null,\"id\":\"/);
+    var chapBlocks = html.split(/{"author":null,"id":"|{\"author\":null,\"id\":\"/);
     for (var i = 1; i < chapBlocks.length; i++) {
         var block = chapBlocks[i];
-        var mName = block.match(/\"name\":\"([^\"]+)\"/);
-        var mChapSlug = block.match(/\"slug\":\"([^\"]+)\"/);
+        var mName = block.match(/"name"s*:s*"([^"]+)"/) || block.match(/\"name\":\"([^\"]+)\"/);
+        var mChapSlug = block.match(/"slug"s*:s*"([^"]+)"/) || block.match(/\"slug\":\"([^\"]+)\"/);
 
         if (mName && mChapSlug) {
             var cName = mName[1];
