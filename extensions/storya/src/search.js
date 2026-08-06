@@ -1,44 +1,9 @@
 load("config.js");
 
 function execute(key, page) {
-    var fetchUrl = BASE_URL + "/tim-kiem?q=" + encodeURIComponent(key);
-
-    var res = fetchBook(fetchUrl);
-    if (!res.ok) return Response.error("Cannot load: " + res.status);
-
-    var doc = res.html();
-    var list = [];
-    var seen = {};
-
-    doc.select("a[href^='/truyen/']").forEach(function (el) {
-        var href = (el.attr("href") || "") + "";
-        if (!href || href === "/truyen/") return;
-        var parts = href.split("/");
-        var slug = parts[parts.length - 1] || parts[parts.length - 2];
-        if (!slug) return;
-
-        var link = BASE_URL + "/truyen/" + slug;
-
-        var titleEl = el.select("h2, h3, h4, .font-bold").first();
-        var name = (titleEl ? titleEl.text() : el.text() || "").trim();
-
-        if (name === "Full" || name === "Hot" || name === "HotFull" || name === "HOT" || name === "FULL") {
-            name = "";
-        }
-
-        if (!name) return;
-        if (seen[link]) return;
-        seen[link] = true;
-
-        var cover = BASE_URL + "/media/covers/" + slug + ".jpg";
-
-        list.push({
-            name: name,
-            link: link,
-            cover: cover,
-            host: BASE_URL
-        });
-    });
-
-    return Response.success(list);
+    var p = page ? parseInt(page) : 1;
+    var json = apiJson("/stories/search?q=" + encodeURIComponent(key) + "&page=" + p + "&limit=20");
+    if (!json || !json.data) return Response.success([], null);
+    var next = (json.meta && p < json.meta.totalPages) ? (p + 1) + "" : null;
+    return Response.success(parseStories(json.data), next);
 }
