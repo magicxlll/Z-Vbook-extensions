@@ -47,6 +47,39 @@
       "description": "Extension chuyên biệt đọc truyện Con Đường Bá Chủ (Full 3752+ chương + 3 Ngoại truyện - Đã sort chương 1-N & Lọc rác đầu chương)",
       "type": "novel",
       "locale": "vi_VN"
+    },
+    {
+      "name": "YanHH3D",
+      "author": "vBook",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/yanhh3d/plugin.zip",
+      "version": 1,
+      "source": "https://yanhh3d.ee",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/yanhh3d/icon.png",
+      "description": "Xem hoạt hình Trung Quốc (donghua) trên YanHH3D",
+      "type": "video",
+      "locale": "vi_VN"
+    },
+    {
+      "name": "HHTQ Vietsub",
+      "author": "vBook",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/hhtqvietsub/plugin.zip",
+      "version": 8,
+      "source": "https://hhtq.hair",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/hhtqvietsub/icon.png",
+      "description": "Xem phim hoạt hình Trung Quốc trên HHTQ Vietsub",
+      "type": "video",
+      "locale": "vi_VN"
+    },
+    {
+      "name": "Motchill",
+      "author": "vBook",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/motchill/plugin.zip",
+      "version": 1,
+      "source": "https://motchille.tv",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/motchill/icon.png",
+      "description": "Xem phim Vietsub, thuyết minh trên Motchill",
+      "type": "video",
+      "locale": "vi_VN"
     }
   ]
 }
