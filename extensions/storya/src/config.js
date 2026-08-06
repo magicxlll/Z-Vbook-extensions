@@ -8,16 +8,3 @@ function fetchBook(url, options) {
     options.headers["Referer"] = BASE_URL + "/";
     return fetch(url, options);
 }
-
-function fixCover(cover) {
-    if (!cover) return "";
-    if (cover.indexOf("http") === 0) return cover;
-    if (cover.indexOf("url=") !== -1) {
-        try {
-            var rawUrl = cover.split("url=")[1].split("&")[0];
-            return BASE_URL + decodeURIComponent(rawUrl);
-        } catch (e) {}
-    }
-    if (cover.indexOf("/") === 0) return BASE_URL + cover;
-    return BASE_URL + "/" + cover;
-}
