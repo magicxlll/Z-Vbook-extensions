@@ -2,8 +2,6 @@ load("config.js");
 
 function execute() {
     return Response.success([
-        { title: "Truyện Mới", input: BASE_URL + "/danh-sach/truyen-moi", script: "gen.js" },
-        { title: "Truyện Hot", input: BASE_URL + "/danh-sach/truyen-hot", script: "gen.js" },
-        { title: "Truyện Full", input: BASE_URL + "/danh-sach/truyen-full", script: "gen.js" }
+        { title: "Tất cả truyện", input: "all", script: "homecontent.js" }
     ]);
 }
