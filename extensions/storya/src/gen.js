@@ -22,12 +22,12 @@ function execute(url, page) {
         var link = href.indexOf("http") === 0 ? href : BASE_URL + href;
         var cover = "";
         var img = el.select("img").first();
-        if (img) cover = (img.attr("src") || img.attr("data-src") || "") + "";
+        if (img) cover = (img.attr("src") || img.attr("srcset") || img.attr("data-src") || "") + "";
 
         list.push({
             name: name,
             link: link,
-            cover: cover,
+            cover: fixCover(cover),
             host: BASE_URL
         });
     });
