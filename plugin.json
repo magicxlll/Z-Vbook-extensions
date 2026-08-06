@@ -102,6 +102,17 @@
       "description": "Nền tảng đọc và viết truyện online Vireal.vn (v4)",
       "type": "novel",
       "locale": "vi_VN"
+    },
+    {
+      "name": "Bàn Long",
+      "author": "vBook",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/banlong/plugin.zip",
+      "version": 7,
+      "source": "https://blhvip.vn",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/banlong/icon.png",
+      "description": "Đọc truyện trên banlong.us",
+      "type": "novel",
+      "locale": "vi-VN"
     }
   ]
 }
