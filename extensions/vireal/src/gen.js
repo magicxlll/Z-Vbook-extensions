@@ -1,43 +1,55 @@
 load("config.js");
 
 function execute(url, page) {
-    page = page || "1";
-    var fetchUrl = url;
-    if (page !== "1") {
-        fetchUrl += "?page=" + page;
-    }
-
-    var res = fetchBook(fetchUrl);
+    var res = fetchBook(url);
     if (!res.ok) return Response.error("Cannot load: " + res.status);
 
-    var doc = res.html();
+    var html = res.text();
     var list = [];
+    var seen = {};
 
-    doc.select("a[href^='/story/']").forEach(function (el) {
-        var href = (el.attr("href") || "") + "";
-        if (!href || href === "/story/") return;
+    var storyRegex = /\"slug\":\"([^\"]+)\"[\s\S]*?\"name\":\"([^\"]+)\"[\s\S]*?\"thumbnail\":\"([^\"]+)\"/g;
+    var m;
+    while ((m = storyRegex.exec(html)) !== null) {
+        var slug = m[1];
+        var name = m[2];
+        var cover = m[3];
+        var link = BASE_URL + "/story/" + slug;
+        if (slug && name && !seen[link]) {
+            seen[link] = true;
+            list.push({
+                name: name,
+                link: link,
+                cover: cover,
+                host: BASE_URL
+            });
+        }
+    }
 
-        var name = (el.select("h3, h2").text() || el.text() || "").trim();
-        var img = el.select("img").first();
-        var cover = "";
-        if (img) cover = (img.attr("src") || img.attr("data-src") || "") + "";
+    if (list.length === 0) {
+        var doc = res.html();
+        doc.select("a[href^='/story/']").forEach(function (el) {
+            var href = (el.attr("href") || "") + "";
+            if (!href || href === "/story/") return;
+            var link = href.indexOf("http") === 0 ? href : BASE_URL + href;
+            if (seen[link]) return;
+            seen[link] = true;
 
-        if (!name && img) name = (img.attr("alt") || "").trim();
-        if (!name) return;
+            var name = (el.select("h3, h2").text() || el.text() || "").trim();
+            var img = el.select("img").first();
+            var cover = "";
+            if (img) cover = (img.attr("src") || img.attr("data-src") || "") + "";
+            if (!name && img) name = (img.attr("alt") || "").trim();
+            if (!name) return;
 
-        var link = href.indexOf("http") === 0 ? href : BASE_URL + href;
-
-        list.push({
-            name: name,
-            link: link,
-            cover: cover,
-            host: BASE_URL
+            list.push({
+                name: name,
+                link: link,
+                cover: cover,
+                host: BASE_URL
+            });
         });
-    });
+    }
 
-    var nextPage = null;
-    var nextBtn = doc.select("a[href*='page=']").last();
-    if (nextBtn) nextPage = String(parseInt(page) + 1);
-
-    return Response.success(list, nextPage);
+    return Response.success(list);
 }
