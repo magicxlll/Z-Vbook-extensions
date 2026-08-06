@@ -18,11 +18,17 @@ function execute(key, page) {
         if (!slug) return;
 
         var link = BASE_URL + "/truyen/" + slug;
+
+        var titleEl = el.select("h2, h3, h4, .font-bold").first();
+        var name = (titleEl ? titleEl.text() : el.text() || "").trim();
+
+        if (name === "Full" || name === "Hot" || name === "HotFull" || name === "HOT" || name === "FULL") {
+            name = "";
+        }
+
+        if (!name) return;
         if (seen[link]) return;
         seen[link] = true;
-
-        var name = (el.select("h3, h2").text() || el.text() || "").trim();
-        if (!name) return;
 
         var cover = BASE_URL + "/media/covers/" + slug + ".jpg";
 
