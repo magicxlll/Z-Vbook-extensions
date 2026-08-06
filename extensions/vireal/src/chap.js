@@ -1,14 +1,13 @@
 load("config.js");
 
 function execute(url) {
-    url = url.replace(/^(?:https?://)?(?:[^@
-]+@)?(?:www.)?([^:/
-?]+)/img, BASE_URL);
+    url = url.replace(/^https?:\/\/[^\/]+/, BASE_URL);
 
     var res = fetchBook(url);
     if (!res.ok) return Response.error("Cannot load: " + res.status);
 
     var html = res.text();
+
     var cleanHtml = html.replace(/\u003c/g, "<").replace(/\u003e/g, ">").replace(/\"/g, '"');
 
     cleanHtml = cleanHtml.replace(/<[a-z0-9]+\s+style="text-indent:-9144px;[^"]*">[^<]*<\/[a-z0-9]+>/gi, "");
@@ -30,8 +29,7 @@ function execute(url) {
         return Response.error("Không tìm thấy nội dung chương");
     }
 
-    var content = contentEl.html() + "";
-    content = content.replace(/&nbsp;/g, " ");
+    var content = (contentEl.html() + "").replace(/&nbsp;/g, " ");
 
     return Response.success(content);
 }
