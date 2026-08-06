@@ -1,41 +1,29 @@
 load("config.js");
 
 function execute(url) {
-    url = url.replace(/^(?:https?://)?(?:[^@
-]+@)?(?:www.)?([^:/
-?]+)/img, BASE_URL);
+    url = url.replace(/^https?:\/\/[^\/]+/, BASE_URL);
 
     var res = fetchBook(url);
     if (!res.ok) return Response.error("Cannot load: " + res.status);
 
     var doc = res.html();
 
-    var name = (doc.select("h1").first() ? doc.select("h1").first().text() : "").trim();
-    
-    var cover = "";
-    var coverEl = doc.select("meta[property='og:image']").first();
-    if (coverEl) cover = (coverEl.attr("content") || "") + "";
-    if (!cover) {
-        var img = doc.select("img[src*='/media/covers/'], img[src*='/_next/image']").first();
-        if (img) cover = (img.attr("src") || img.attr("srcset") || "") + "";
-    }
+    var name = (doc.select("meta[property='og:title']").attr("content") || doc.select("h1").text() || "").trim();
+    name = name.replace(/\s*\[Tới Chương.*$/i, "").trim();
 
-    var author = (doc.select("a[href^='/tac-gia/']").first() ? doc.select("a[href^='/tac-gia/']").first().text() : "").trim();
-    var description = (doc.select(".description, .summary, [class*='desc']").first() ? doc.select(".description, .summary, [class*='desc']").first().text() : "").trim();
+    var parts = url.split("/");
+    var slug = parts[parts.length - 1] || parts[parts.length - 2];
+    var cover = BASE_URL + "/media/covers/" + slug + ".jpg";
 
-    var genres = [];
-    doc.select("a[href^='/the-loai/']").forEach(function (el) {
-        var gText = (el.text() || "").trim();
-        if (gText && genres.indexOf(gText) === -1) genres.push(gText);
-    });
+    var author = (doc.select("meta[name='author']").attr("content") || doc.select("a[href^='/tac-gia/']").text() || "").trim();
+    var description = (doc.select("meta[name='description']").attr("content") || doc.select(".description, .summary").text() || "").trim();
 
     return Response.success({
         name: name || "Storya Novel",
-        cover: fixCover(cover),
+        cover: cover,
         host: BASE_URL,
         author: author || "Khuyết Danh",
         description: description,
-        ongoing: true,
-        genres: genres
+        ongoing: true
     });
 }
