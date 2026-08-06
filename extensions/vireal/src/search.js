@@ -10,14 +10,14 @@ function execute(key, page) {
     var list = [];
     var seen = {};
 
-    var blocks = html.split(/\{\"id\":\"/);
+    var blocks = html.split(/{"id":"|{\"id\":\"/);
     for (var i = 1; i < blocks.length; i++) {
         var block = blocks[i];
-        var mSlug = block.match(/\"slug\":\"([^\"]+)\"/);
-        var mName = block.match(/\"name\":\"([^\"]+)\"/);
-        var mThumb = block.match(/\"thumbnail\":\"([^\"]+)\"/);
+        var mName = block.match(/"name"s*:s*"([^"]+)"/) || block.match(/\"name\":\"([^\"]+)\"/);
+        var mSlug = block.match(/"slug"s*:s*"([^"]+)"/) || block.match(/\"slug\":\"([^\"]+)\"/);
+        var mThumb = block.match(/"thumbnail"s*:s*"([^"]+)"/) || block.match(/\"thumbnail\":\"([^\"]+)\"/);
 
-        if (mSlug && mName) {
+        if (mName && mSlug) {
             var slug = mSlug[1];
             var name = mName[1];
             var cover = mThumb ? mThumb[1] : "";
