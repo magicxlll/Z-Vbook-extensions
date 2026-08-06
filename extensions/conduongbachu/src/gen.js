@@ -1,53 +1,44 @@
 load("config.js");
 
 function execute(url, page) {
-    page = page !== undefined ? page : "1";
-
-    if (url.indexOf("/chuong-") > -1) {
-        return Response.success([
-            {
-                name: "Con Đường Bá Chủ",
-                link: url,
-                cover: "https://conduongbachu.com/wp-content/uploads/2024/12/20355-con-duong-ba-chu_cover_large.webp",
-                description: "Truyện Con Đường Bá Chủ của tác giả Akay Hậu thuộc thể loại tiên hiệp, kiếm hiệp...",
-                host: BASE_URL
-            }
-        ], null);
-    }
-
-    var fetchUrl = url;
-    if (page !== "1") {
-        var cleanUrl = url.replace(/\/$/, "");
-        fetchUrl = cleanUrl + "/page/" + page + "/";
-    }
-
-    var res = fetchBook(fetchUrl);
-    if (!res.ok) return Response.error("Cannot load: " + res.status);
-
-    var doc = res.html();
-    var list = [];
-
-    doc.select("article.post").forEach(function (el) {
-        var name = el.select("h2.entry-title a").text().trim() + "";
-        var link = (el.select("h2.entry-title a").attr("href") || "") + "";
-        var cover = "https://conduongbachu.com/wp-content/uploads/2024/12/20355-con-duong-ba-chu_cover_large.webp";
-
-        if (!name || !link) return;
-        if (link.indexOf("http") !== 0) link = BASE_URL + (link.indexOf("/") === 0 ? link : "/" + link);
-
-        list.push({
-            name: name,
-            link: link,
-            cover: cover,
+    var stories = [
+        {
+            name: "Con Đường Bá Chủ (Truyện Chính - 3752+ Chương)",
+            link: BASE_URL + "/chuong-3752-ket-thuc-se-la-noi-bat-dau/",
+            cover: "https://conduongbachu.com/wp-content/uploads/2024/12/20355-con-duong-ba-chu_cover_large.webp",
+            description: "Bộ truyện chính Con Đường Bá Chủ của tác giả Akay Hậu thuộc thể loại tiên hiệp, kiếm hiệp. Cập nhật đầy đủ 3,752+ chương.",
             host: BASE_URL
-        });
-    });
+        },
+        {
+            name: "Ngoại Truyện: Bất Hủ Thần Chiến",
+            link: BASE_URL + "/ngoai-truyen/",
+            cover: "https://conduongbachu.com/wp-content/uploads/2025/04/conduongbachu-ngoai-truyen.jpg",
+            description: "Phần Ngoại Truyện - Bất Hủ Thần Chiến của Con Đường Bá Chủ.",
+            host: BASE_URL
+        },
+        {
+            name: "Ngoại Truyện: Vạn Đạo Thần Chủ",
+            link: BASE_URL + "/ngoai-truyen-van-dao-than-chu/",
+            cover: "https://audio.cognitus.store/wp-content/uploads/2026/07/conduongbachu-ngoai-truyen-chuatechilo.jpg",
+            description: "Phần Ngoại Truyện - Vạn Đạo Thần Chủ của Con Đường Bá Chủ.",
+            host: BASE_URL
+        },
+        {
+            name: "Ngoại Truyện: Chúa Tể Chi Lộ",
+            link: BASE_URL + "/ngoai-truyen-chua-te-chi-lo/",
+            cover: "https://audio.cognitus.store/wp-content/uploads/2026/07/conduongbachu-ngoai-truyen-chuatechilo.jpg",
+            description: "Phần Ngoại Truyện - Chúa Tể Chi Lộ của Con Đường Bá Chủ.",
+            host: BASE_URL
+        }
+    ];
 
-    var nextPage = null;
-    var nextEl = doc.select(".nav-pagination a.next").first();
-    if (nextEl) {
-        nextPage = String(parseInt(page) + 1);
+    if (url.indexOf("/all-ngoai-truyen") > -1) {
+        return Response.success(stories.slice(1));
     }
 
-    return Response.success(list, nextPage);
+    if (url.indexOf("/chuong-3752") > -1) {
+        return Response.success([stories[0]]);
+    }
+
+    return Response.success(stories);
 }
