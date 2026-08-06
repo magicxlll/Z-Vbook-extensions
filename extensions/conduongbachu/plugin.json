@@ -2,10 +2,10 @@
   "metadata": {
     "name": "Con Đường Bá Chủ",
     "author": "Zitzz",
-    "version": 2,
+    "version": 3,
     "source": "https://conduongbachu.com",
     "regexp": "https?:\\/\\/(?:www\\.)?conduongbachu\\.com\\/.*$",
-    "description": "Extension chuyên biệt đọc truyện Con Đường Bá Chủ (Full 3752+ chương)",
+    "description": "Extension chuyên biệt đọc truyện Con Đường Bá Chủ (Full 3752+ chương + 3 Ngoại truyện)",
     "locale": "vi_VN",
     "language": "javascript",
     "type": "novel"
