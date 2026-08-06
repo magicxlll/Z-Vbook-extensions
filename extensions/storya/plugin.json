@@ -2,10 +2,10 @@
   "metadata": {
     "name": "Storya",
     "author": "Zitzz",
-    "version": 3,
+    "version": 4,
     "source": "https://storya.click",
     "regexp": "https?:\\/\\/(?:www\\.)?storya\\.click\\/.*$",
-    "description": "Kho đọc truyện chữ online chất lượng cao Storya.click (v3)",
+    "description": "Kho đọc truyện chữ online chất lượng cao Storya.click (v4)",
     "locale": "vi_VN",
     "language": "javascript",
     "type": "novel"
