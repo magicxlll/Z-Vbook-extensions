@@ -1,14 +1,24 @@
-// gen.js — Parser danh sách truyện
-// Contract: execute(url, page) → [{ name, link, cover, host, description }], nextPage
 load("config.js");
 
 function execute(url, page) {
     page = page !== undefined ? page : "1";
 
-    // Nếu URL là link phân trang, thêm page param
+    if (url.indexOf("/chuong-") > -1) {
+        return Response.success([
+            {
+                name: "Con Đường Bá Chủ",
+                link: url,
+                cover: "https://conduongbachu.com/wp-content/uploads/2024/12/20355-con-duong-ba-chu_cover_large.webp",
+                description: "Truyện Con Đường Bá Chủ của tác giả Akay Hậu thuộc thể loại tiên hiệp, kiếm hiệp...",
+                host: BASE_URL
+            }
+        ], null);
+    }
+
     var fetchUrl = url;
     if (page !== "1") {
-        fetchUrl = url + (url.indexOf("?") > -1 ? "&" : "?") + "page=" + page;
+        var cleanUrl = url.replace(/\/$/, "");
+        fetchUrl = cleanUrl + "/page/" + page + "/";
     }
 
     var res = fetchBook(fetchUrl);
@@ -18,18 +28,12 @@ function execute(url, page) {
     var list = [];
 
     doc.select("article.post").forEach(function (el) {
-        var name = el.select("h2.entry-title a").text() + "";
+        var name = el.select("h2.entry-title a").text().trim() + "";
         var link = (el.select("h2.entry-title a").attr("href") || "") + "";
-        var cover = (el.select("img").attr("src") || el.select("img").attr("data-src") || "") + "";
+        var cover = "https://conduongbachu.com/wp-content/uploads/2024/12/20355-con-duong-ba-chu_cover_large.webp";
 
         if (!name || !link) return;
-        if (link.indexOf("http") !== 0) {
-            link = link.indexOf("/") === 0 ? BASE_URL + link : BASE_URL + "/" + link;
-        }
-        if (cover && cover.indexOf("http") !== 0) {
-            if (cover.indexOf("//") === 0) cover = "https:" + cover;
-            else cover = BASE_URL + cover;
-        }
+        if (link.indexOf("http") !== 0) link = BASE_URL + (link.indexOf("/") === 0 ? link : "/" + link);
 
         list.push({
             name: name,
@@ -39,7 +43,6 @@ function execute(url, page) {
         });
     });
 
-    // Kiểm tra trang tiếp theo
     var nextPage = null;
     var nextEl = doc.select(".nav-pagination a.next").first();
     if (nextEl) {
