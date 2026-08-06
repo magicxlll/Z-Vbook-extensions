@@ -1,5 +1,3 @@
-// detail.js — Thông tin chi tiết truyện
-// Contract: execute(url) → { name, cover, host, author, description, ongoing, genres?, suggests? }
 load("config.js");
 
 function execute(url) {
@@ -10,44 +8,31 @@ function execute(url) {
 
     var doc = res.html();
 
-    // Tên truyện
-    var nameEl = doc.select("h1.entry-title, h1").first();
-    var name = (nameEl ? nameEl.text() : "") + "";
-
-    // Ảnh bìa
-    var coverEl = doc.select(".entry-image-float img, meta[property='og:image']").first();
-    var cover = "";
-    if (coverEl) {
-        cover = (coverEl.attr("data-src") || coverEl.attr("src") || "") + "";
-        if (cover.indexOf("//") === 0) cover = "https:" + cover;
-        if (cover && cover.indexOf("http") !== 0) cover = BASE_URL + cover;
+    var name = "Con Đường Bá Chủ";
+    var h1 = doc.select("h1.entry-title, h1").first();
+    if (h1 && h1.text()) {
+        var t = h1.text().trim() + "";
+        if (t.indexOf("Chương") === -1 && t.length > 2 && t.length < 100) {
+            name = t;
+        }
     }
 
-    // Tác giả
-    var authorEl = doc.select("[itemprop='author'], .meta-author").first();
-    var author = (authorEl ? authorEl.text() : "") + "";
+    var cover = "https://conduongbachu.com/wp-content/uploads/2024/12/20355-con-duong-ba-chu_cover_large.webp";
+    var coverEl = doc.select(".entry-image-float img, meta[property='og:image']").first();
+    if (coverEl) {
+        var cSrc = (coverEl.attr("data-src") || coverEl.attr("src") || coverEl.attr("content") || "") + "";
+        if (cSrc && cSrc.indexOf("http") === 0) cover = cSrc;
+    }
 
-    // Trạng thái
-    var statusEl = doc.select(".status").first();
-    var status = (statusEl ? statusEl.text() : "") + "";
-    var ongoing = status.indexOf("Hoàn") === -1
-        && status.indexOf("Completed") === -1
-        && status.indexOf("Full") === -1
-        && status.indexOf("完结") === -1;
+    var author = "Akay Hậu";
+    var description = "Truyện Con Đường Bá Chủ của tác giả Akay Hậu thuộc thể loại tiên hiệp, kiếm hiệp đặc sắc cập nhật mới nhất tại conduongbachu.com.";
 
-    // Mô tả
-    var descEl = doc.select(".lead").first();
-    var description = (descEl ? descEl.html() : "") + "";
-
-    // Thể loại
-    var genres = [];
-    doc.select(".sub-menu a").forEach(function (el) {
-        var gTitle = el.text() + "";
-        var gHref = (el.attr("href") || "") + "";
-        if (!gTitle || !gHref) return;
-        if (gHref.indexOf("http") !== 0) gHref = BASE_URL + gHref;
-        genres.push({ title: gTitle, input: gHref, script: "gen.js" });
-    });
+    var genres = [
+        { title: "Chapter truyện", input: BASE_URL + "/chapter-truyen/", script: "gen.js" },
+        { title: "Bất Hủ Thần Chiến", input: BASE_URL + "/ngoai-truyen/", script: "gen.js" },
+        { title: "Vạn Đạo Thần Chủ", input: BASE_URL + "/ngoai-truyen-van-dao-than-chu/", script: "gen.js" },
+        { title: "Chúa Tể Chi Lộ", input: BASE_URL + "/ngoai-truyen-chua-te-chi-lo/", script: "gen.js" }
+    ];
 
     return Response.success({
         name: name,
@@ -55,7 +40,7 @@ function execute(url) {
         host: BASE_URL,
         author: author,
         description: description,
-        ongoing: ongoing,
-        genres: genres.length > 0 ? genres : undefined
+        ongoing: true,
+        genres: genres
     });
 }
