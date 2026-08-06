@@ -2,10 +2,10 @@
   "metadata": {
     "name": "Vireal",
     "author": "Zitzz",
-    "version": 3,
+    "version": 4,
     "source": "https://vireal.vn",
     "regexp": "https?:\\/\\/(?:www\\.)?vireal\\.vn\\/.*$",
-    "description": "Nền tảng đọc và viết truyện online Vireal.vn (v3)",
+    "description": "Nền tảng đọc và viết truyện online Vireal.vn (v4)",
     "locale": "vi_VN",
     "language": "javascript",
     "type": "novel"
