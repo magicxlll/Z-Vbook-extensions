@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "name": "Con Đường Bá Chủ",
+    "author": "Zitzz",
+    "version": 1,
+    "source": "https://conduongbachu.com",
+    "regexp": "https?:\\/\\/(?:www\\.)?conduongbachu\\\\.com\\/[^/]+\\/?$",
+    "description": "Extension cho Con Đường Bá Chủ",
+    "locale": "vi_VN",
+    "language": "javascript",
+    "type": "novel"
+  },
+  "script": {
+    "home": "home.js",
+    "detail": "detail.js",
+    "search": "search.js",
+    "page": "page.js",
+    "toc": "toc.js",
+    "chap": "chap.js"
+  }
+}
