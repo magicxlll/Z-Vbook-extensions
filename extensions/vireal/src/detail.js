@@ -8,17 +8,29 @@ function execute(url) {
     var res = fetchBook(url);
     if (!res.ok) return Response.error("Cannot load: " + res.status);
 
+    var html = res.text();
     var doc = res.html();
 
-    var name = (doc.select("h1").first() ? doc.select("h1").first().text() : "").trim();
-    var cover = "";
-    var coverEl = doc.select("img[src*='/uploads/images/'], meta[property='og:image']").first();
-    if (coverEl) {
-        cover = (coverEl.attr("src") || coverEl.attr("content") || "") + "";
+    var name = "";
+    var mName = html.match(/\"name\":\"([^\"]+)\"/);
+    if (mName) name = mName[1];
+    if (!name) {
+        var h1 = doc.select("h1").first();
+        if (h1) name = (h1.text() || "").trim();
     }
 
-    var author = (doc.select("a[href^='/user/']").first() ? doc.select("a[href^='/user/']").first().text() : "").trim();
-    var description = (doc.select(".description, .storyQuote, [class*='info']").first() ? doc.select(".description, .storyQuote, [class*='info']").first().text() : "").trim();
+    var cover = "";
+    var mCover = html.match(/\"thumbnail\":\"([^\"]+)\"/) || html.match(/og:image"s+content="([^"]+)"/);
+    if (mCover) cover = mCover[1];
+
+    var author = "";
+    var mAuthor = html.match(/\"author\":\"([^\"]+)\"/);
+    if (mAuthor) author = mAuthor[1];
+
+    var description = "";
+    var mDesc = html.match(/\"metadata\":\"([^\"]+)\"/);
+    if (mDesc) description = mDesc[1].replace(/\n/g, "
+");
 
     return Response.success({
         name: name || "Vireal Story",
