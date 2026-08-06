@@ -1,21 +1,23 @@
 {
   "metadata": {
     "name": "Storya",
-    "author": "Zitzz",
-    "version": 4,
+    "author": "Meo",
+    "version": 2,
     "source": "https://storya.click",
-    "regexp": "https?:\\/\\/(?:www\\.)?storya\\.click\\/.*$",
-    "description": "Kho đọc truyện chữ online chất lượng cao Storya.click (v4)",
+    "regexp": "storya\\.click\\/truyen\\/[^\\/]+\\/?$",
+    "description": "Storya - Đọc truyện chữ online miễn phí",
     "locale": "vi_VN",
-    "language": "javascript",
     "type": "novel"
   },
   "script": {
     "home": "home.js",
+    "homecontent": "homecontent.js",
+    "genre": "genre.js",
+    "genrecontent": "genrecontent.js",
     "detail": "detail.js",
     "search": "search.js",
-    "page": "page.js",
     "toc": "toc.js",
-    "chap": "chap.js"
+    "chap": "chap.js",
+    "suggest": "suggest.js"
   }
 }
