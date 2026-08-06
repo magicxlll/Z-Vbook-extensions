@@ -1,34 +1,25 @@
-// search.js — Tìm kiếm truyện
-// Contract: execute(key, page) → [{ name, link, cover, host }], nextPage
 load("config.js");
 
 function execute(key, page) {
     page = page !== undefined ? page : "1";
-
-    var searchUrl = BASE_URL + "/tim-kiem/?tukhoa=" + encodeURIComponent(key);
+    var fetchUrl = BASE_URL + "/?s=" + encodeURIComponent(key);
     if (page !== "1") {
-        searchUrl = searchUrl + "&page=" + page;
+        fetchUrl += "&paged=" + page;
     }
 
-    var res = fetchBook(searchUrl);
-    if (!res.ok) return Response.error("Cannot search: " + res.status);
+    var res = fetchBook(fetchUrl);
+    if (!res.ok) return Response.error("Cannot load: " + res.status);
 
     var doc = res.html();
     var list = [];
 
     doc.select("article.post").forEach(function (el) {
-        var name = el.select("h2.entry-title a").text() + "";
+        var name = el.select("h2.entry-title a").text().trim() + "";
         var link = (el.select("h2.entry-title a").attr("href") || "") + "";
-        var cover = (el.select("img").attr("src") || el.select("img").attr("data-src") || "") + "";
+        var cover = "https://conduongbachu.com/wp-content/uploads/2024/12/20355-con-duong-ba-chu_cover_large.webp";
 
         if (!name || !link) return;
-        if (link.indexOf("http") !== 0) {
-            link = link.indexOf("/") === 0 ? BASE_URL + link : BASE_URL + "/" + link;
-        }
-        if (cover && cover.indexOf("http") !== 0) {
-            if (cover.indexOf("//") === 0) cover = "https:" + cover;
-            else cover = BASE_URL + cover;
-        }
+        if (link.indexOf("http") !== 0) link = BASE_URL + (link.indexOf("/") === 0 ? link : "/" + link);
 
         list.push({
             name: name,
@@ -38,11 +29,5 @@ function execute(key, page) {
         });
     });
 
-    var nextPage = null;
-    var nextEl = doc.select(".nav-pagination a.next").first();
-    if (nextEl) {
-        nextPage = String(parseInt(page) + 1);
-    }
-
-    return Response.success(list, nextPage);
+    return Response.success(list);
 }
