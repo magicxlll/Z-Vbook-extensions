@@ -1,18 +1,31 @@
-// home.js — Trang chủ khám phá
-// Contract: execute() → [{ title, input, script }]
 load("config.js");
 
 function execute() {
     return Response.success([
-    {
-        "title": "Mới cập nhật",
-        "input": "https://conduongbachu.com",
-        "script": "gen.js"
-    },
-    {
-        "title": "Hoàn thành",
-        "input": "https://conduongbachu.com/hoan-thanh/",
-        "script": "gen.js"
-    }
-]);
+        {
+            title: "Con Đường Bá Chủ",
+            input: BASE_URL + "/chuong-3752-ket-thuc-se-la-noi-bat-dau/",
+            script: "gen.js"
+        },
+        {
+            title: "Tất cả Chapter",
+            input: BASE_URL + "/chapter-truyen/",
+            script: "gen.js"
+        },
+        {
+            title: "Bất Hủ Thần Chiến",
+            input: BASE_URL + "/ngoai-truyen/",
+            script: "gen.js"
+        },
+        {
+            title: "Vạn Đạo Thần Chủ",
+            input: BASE_URL + "/ngoai-truyen-van-dao-than-chu/",
+            script: "gen.js"
+        },
+        {
+            title: "Chúa Tể Chi Lộ",
+            input: BASE_URL + "/ngoai-truyen-chua-te-chi-lo/",
+            script: "gen.js"
+        }
+    ]);
 }
