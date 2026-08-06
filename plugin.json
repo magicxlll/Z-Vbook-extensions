@@ -85,10 +85,10 @@
       "name": "Storya",
       "author": "Zitzz",
       "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/storya/plugin.zip",
-      "version": 2,
+      "version": 3,
       "source": "https://storya.click",
       "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/storya/icon.png",
-      "description": "Kho đọc truyện chữ online chất lượng cao Storya.click (v2)",
+      "description": "Kho đọc truyện chữ online chất lượng cao Storya.click (v3)",
       "type": "novel",
       "locale": "vi_VN"
     },
@@ -96,10 +96,10 @@
       "name": "Vireal",
       "author": "Zitzz",
       "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/vireal/plugin.zip",
-      "version": 2,
+      "version": 3,
       "source": "https://vireal.vn",
       "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/vireal/icon.png",
-      "description": "Nền tảng đọc và viết truyện online Vireal.vn (v2)",
+      "description": "Nền tảng đọc và viết truyện online Vireal.vn (v3)",
       "type": "novel",
       "locale": "vi_VN"
     }
