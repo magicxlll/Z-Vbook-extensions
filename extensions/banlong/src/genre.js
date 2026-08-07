@@ -1,17 +1,18 @@
 load("config.js");
 
 function execute() {
-    let response = fetch(BASE_URL);
+    var response = fetchBook(BASE_URL);
     if (response.ok) {
-        let genres = [];
-        response.html().select(".modal-story-genre li a").forEach(e => {
+        var doc = response.html();
+        var genres = [];
+        doc.select("a[href^=the-loai]").forEach(function(e) {
             genres.push({
                 title: e.text(),
                 input: BASE_URL + "/" + e.attr("href"),
-                script: 'source.js'
+                script: "search.js"
             });
         });
         return Response.success(genres);
     }
-    return null;
+    return Response.error("Cannot load genres");
 }
