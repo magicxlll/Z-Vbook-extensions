@@ -1,5 +1,5 @@
 load("config.js");
 
-function execute(input, page) {
-    return Response.success([], null);
+function execute(input) {
+    return Response.success([]);
 }
