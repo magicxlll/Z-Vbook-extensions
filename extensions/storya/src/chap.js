@@ -22,7 +22,7 @@ function execute(url) {
     // Fallback: WebView
     var browser = Engine.newBrowser();
     try {
-        var doc = browser.launch(HOST + "/truyen/" + story + "/" + chap, 15000);
+        var doc = browser.launch(url, 15000);
         if (doc) {
             var el = doc.select(".chapter-content, .reading-content, #chapter-content, .prose").get(0);
             if (el) {
