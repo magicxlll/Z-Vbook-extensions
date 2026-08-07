@@ -1,30 +1,38 @@
 load("config.js");
 
 function execute(key, page) {
-    if (!page) page = '1';
-    let response = fetch(BASE_URL + "/tim-kiem?q=" + key.replace(" ", "+") + "&page=" + page);
-    if (response.ok) {
-        let doc = response.html();
+    page = page || "1";
+    var fetchUrl = key ? BASE_URL + "/tim-kiem?key=" + encodeURIComponent(key) + "&page=" + page : BASE_URL + "/truyen-hot";
 
-        let nextPage = /page=(\d+)/.exec(doc.select(".next-page").first().attr("href"));
-        if (nextPage) nextPage = nextPage[1];
-        else nextPage = "";
+    var response = fetchBook(fetchUrl);
+    if (!response.ok) return Response.error("Cannot load: " + response.status);
 
-        let books = [];
-        doc.select(".basis-full").select(".novel-item").forEach(e => {
-            let type = e.select("a[href^=danh-muc]").text();
-            if (type) {
-                type = "[" + type + "] ";
-            }
-            books.push({
-                name: type + e.select("h3").text(),
-                link: e.select("a").first().attr("href"),
-                cover: e.select("img").first().attr("src"),
-                description: e.select(".author ").text() + "<br>" + e.select(".story-info").text(),
-                host: BASE_URL,
+    var doc = response.html();
+    var list = [];
+    var seen = {};
+
+    doc.select(".book-item, .story-item, a[href*='/truyen/']").forEach(function(el) {
+        var a = el.name() === "a" ? el : el.select("a[href*='/truyen/']").first();
+        if (!a) return;
+        var href = (a.attr("href") || "") + "";
+        if (!href || href === "/truyen/") return;
+        var link = href.indexOf("http") === 0 ? href : BASE_URL + href;
+        if (seen[link]) return;
+        seen[link] = true;
+
+        var name = (el.select(".title, h3, h2").text() || a.text() || "").trim();
+        var img = el.select("img").first();
+        var cover = img ? (img.attr("src") || img.attr("data-src") || "") + "" : "";
+
+        if (name) {
+            list.push({
+                name: name,
+                link: link,
+                cover: cover,
+                host: BASE_URL
             });
-        });
+        }
+    });
 
-        return Response.success(books, nextPage);
-    }
+    return Response.success(list);
 }
