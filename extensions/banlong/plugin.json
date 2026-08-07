@@ -1,8 +1,8 @@
 {
   "metadata": {
     "name": "Bàn Long",
-    "author": "vBook",
-    "version": 21,
+    "author": "Zitzz",
+    "version": 22,
     "source": "https://blhvip.vn",
     "regexp": "https?:\\/\\/(?:www\\.)?(?:banlong\\.vip|blhvip\\.vn)\\/",
     "description": "Đọc truyện trên banlong.us / blhvip.vn",
