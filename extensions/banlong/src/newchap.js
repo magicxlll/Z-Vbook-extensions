@@ -12,12 +12,21 @@ function execute(url, page) {
 
         var books = [];
         doc.select(".list-story__item li").forEach(function(e) {
-            books.push({
-                name: e.select("p.line-clamp-1").text(),
-                link: e.select("a").attr("href").replace(/chuong-\d+/g, ""),
-                description: e.select("a.line-clamp-1").text(),
-                host: BASE_URL
-            });
+            var aTags = e.select("a.line-clamp-1");
+            if (aTags.size() > 0) {
+                var firstA = aTags.first();
+                var lastA = aTags.last();
+                var link = firstA.attr("href");
+                if (link && link.indexOf("http") !== 0 && link.charAt(0) !== "/") {
+                    link = "/" + link;
+                }
+                books.push({
+                    name: firstA.text().trim(),
+                    link: link,
+                    description: lastA.text().trim(),
+                    host: BASE_URL
+                });
+            }
         });
 
         return Response.success(books, nextPage);
