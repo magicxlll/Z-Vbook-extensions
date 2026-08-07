@@ -1,8 +1,8 @@
 {
   "metadata": {
     "name": "Web đọc truyện Online lớn nhất Việt Nam",
-    "author": "VBook UserTest User",
-    "version": 1,
+    "author": "Zitzz",
+    "version": 2,
     "source": "https://truyenfull.vision",
     "regexp": "https?:\\/\\/(?:www\\.)?truyenfull\\\\.vision\\/[^/]+\\/?$",
     "description": "Extension cho Web đọc truyện Online lớn nhất Việt Nam",
