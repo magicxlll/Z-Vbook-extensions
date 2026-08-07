@@ -6,12 +6,12 @@ function execute() {
     return Response.success([
     {
         "title": "Mới cập nhật",
-        "input": "https://truyenfull.vision",
+        "input": BASE_URL,
         "script": "gen.js"
     },
     {
         "title": "Hoàn thành",
-        "input": "https://truyenfull.vision/hoan-thanh/",
+        "input": BASE_URL + "/hoan-thanh/",
         "script": "gen.js"
     }
 ]);
