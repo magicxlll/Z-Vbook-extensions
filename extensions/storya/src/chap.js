@@ -22,9 +22,11 @@ function execute(url) {
     // Fallback: WebView
     var browser = Engine.newBrowser();
     try {
-        var doc = browser.launch(url, 15000);
+        var absoluteUrl = url;
+        if (url.indexOf("http") !== 0) absoluteUrl = HOST + "/truyen/" + story + "/" + chap;
+        var doc = browser.launch(absoluteUrl, 15000);
         if (doc) {
-            var el = doc.select(".chapter-content, .reading-content, #chapter-content, .prose").get(0);
+            var el = doc.select(".chapter-content, #reading-content, #chapter-content, .prose").get(0);
             if (el) {
                 el.select("script, style, noscript, iframe, ins, .ads").remove();
                 return Response.success(el.html());
