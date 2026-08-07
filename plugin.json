@@ -7,11 +7,11 @@
     {
       "name": "AkayTruyen",
       "author": "Zitzz",
-      "path": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/akaytruyen/plugin.zip",
-      "lib": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/akaytruyen/plugin.json",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/akaytruyen/plugin.zip",
+      "lib": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/akaytruyen/plugin.json",
       "version": 1,
       "source": "https://akaytruyen.com",
-      "icon": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/akaytruyen/icon.png",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/akaytruyen/icon.png",
       "description": "Extension cho AkayTruyen",
       "type": "novel",
       "locale": "vi_VN"
@@ -19,11 +19,11 @@
     {
       "name": "Bàn Long",
       "author": "Zitzz",
-      "path": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/banlong/plugin.zip",
-      "lib": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/banlong/plugin.json",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/banlong/plugin.zip",
+      "lib": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/banlong/plugin.json",
       "version": 22,
       "source": "https://blhvip.vn",
-      "icon": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/banlong/icon.png",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/banlong/icon.png",
       "description": "Đọc truyện trên banlong.us / blhvip.vn",
       "type": "novel",
       "locale": "vi_VN"
@@ -31,11 +31,11 @@
     {
       "name": "Con Đường Bá Chủ",
       "author": "Zitzz",
-      "path": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/conduongbachu/plugin.zip",
-      "lib": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/conduongbachu/plugin.json",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/conduongbachu/plugin.zip",
+      "lib": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/conduongbachu/plugin.json",
       "version": 4,
       "source": "https://conduongbachu.com",
-      "icon": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/conduongbachu/icon.png",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/conduongbachu/icon.png",
       "description": "Extension chuyên biệt đọc truyện Con Đường Bá Chủ (Full 3752+ chương + 3 Ngoại truyện - Đã sort chương 1-N & Lọc rác đầu chương)",
       "type": "novel",
       "locale": "vi_VN"
@@ -43,11 +43,11 @@
     {
       "name": "HHTQ Vietsub",
       "author": "Zitzz",
-      "path": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/hhtqvietsub/plugin.zip",
-      "lib": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/hhtqvietsub/plugin.json",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/hhtqvietsub/plugin.zip",
+      "lib": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/hhtqvietsub/plugin.json",
       "version": 9,
       "source": "https://hhtq.hair",
-      "icon": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/hhtqvietsub/icon.png",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/hhtqvietsub/icon.png",
       "description": "Xem phim hoạt hình Trung Quốc trên HHTQ Vietsub",
       "type": "video",
       "locale": "vi_VN"
@@ -55,11 +55,11 @@
     {
       "name": "Motchill",
       "author": "Zitzz",
-      "path": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/motchill/plugin.zip",
-      "lib": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/motchill/plugin.json",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/motchill/plugin.zip",
+      "lib": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/motchill/plugin.json",
       "version": 2,
       "source": "https://motchille.tv",
-      "icon": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/motchill/icon.png",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/motchill/icon.png",
       "description": "Xem phim Vietsub, thuyết minh trên Motchill",
       "type": "video",
       "locale": "vi_VN"
@@ -67,11 +67,11 @@
     {
       "name": "Storya",
       "author": "Zitzz",
-      "path": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/storya/plugin.zip",
-      "lib": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/storya/plugin.json",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/storya/plugin.zip",
+      "lib": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/storya/plugin.json",
       "version": 22,
       "source": "https://storya.click",
-      "icon": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/storya/icon.png",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/storya/icon.png",
       "description": "Storya - Đọc truyện chữ online miễn phí",
       "type": "novel",
       "locale": "vi_VN"
@@ -79,11 +79,11 @@
     {
       "name": "Web đọc truyện Online lớn nhất Việt Nam",
       "author": "Zitzz",
-      "path": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/truyenfull/plugin.zip",
-      "lib": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/truyenfull/plugin.json",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/truyenfull/plugin.zip",
+      "lib": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/truyenfull/plugin.json",
       "version": 2,
       "source": "https://truyenfull.vision",
-      "icon": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/truyenfull/icon.png",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/truyenfull/icon.png",
       "description": "Extension cho Web đọc truyện Online lớn nhất Việt Nam",
       "type": "novel",
       "locale": "vi_VN"
@@ -91,11 +91,11 @@
     {
       "name": "Thư viện Online",
       "author": "Zitzz",
-      "path": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/vietnamthuquan/plugin.zip",
-      "lib": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/vietnamthuquan/plugin.json",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/vietnamthuquan/plugin.zip",
+      "lib": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/vietnamthuquan/plugin.json",
       "version": 1,
       "source": "http://vietnamthuquan.eu",
-      "icon": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/vietnamthuquan/icon.png",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/vietnamthuquan/icon.png",
       "description": "Extension cho Thư viện Online",
       "type": "novel",
       "locale": "vi_VN"
@@ -103,11 +103,11 @@
     {
       "name": "XTruyen Test",
       "author": "Zitzz",
-      "path": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/xtruyen/plugin.zip",
-      "lib": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/xtruyen/plugin.json",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/xtruyen/plugin.zip",
+      "lib": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/xtruyen/plugin.json",
       "version": 2,
       "source": "https://xtruyen.vn",
-      "icon": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/xtruyen/icon.png",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/xtruyen/icon.png",
       "description": "Test extension for xtruyen.vn",
       "type": "novel",
       "locale": "vi_VN"
@@ -115,11 +115,11 @@
     {
       "name": "YanHH3D",
       "author": "Zitzz",
-      "path": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/yanhh3d/plugin.zip",
-      "lib": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/yanhh3d/plugin.json",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/yanhh3d/plugin.zip",
+      "lib": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/yanhh3d/plugin.json",
       "version": 2,
       "source": "https://yanhh3d.ee",
-      "icon": "https://raw.githubusercontent.com/Zitzz/Z-Vbook-extensions/main/extensions/yanhh3d/icon.png",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/yanhh3d/icon.png",
       "description": "Xem hoạt hình Trung Quốc (donghua) trên YanHH3D",
       "type": "video",
       "locale": "vi_VN"
