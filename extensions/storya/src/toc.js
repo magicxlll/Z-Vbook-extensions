@@ -10,7 +10,11 @@ function execute(url) {
         if (!json || !json.data || json.data.length === 0) break;
         for (var i = 0; i < json.data.length; i++) {
             var ch = json.data[i];
-            chapters.push({ name: ch.title || ("Chương " + ch.order), url: slug + "/" + ch.slug, host: HOST });
+            chapters.push({
+                name: ch.title || ("Chương " + ch.order),
+                url: HOST + "/truyen/" + slug + "/" + ch.slug,
+                host: HOST
+            });
         }
         total = json.meta ? json.meta.totalPages : 1;
         p++;
