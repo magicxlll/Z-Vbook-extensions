@@ -2,7 +2,7 @@
   "metadata": {
     "name": "Storya",
     "author": "Meo",
-    "version": 15,
+    "version": 20,
     "source": "https://storya.click",
     "regexp": "https?:\\/\\/(?:www\\.)?storya\\.click\\/",
     "description": "Storya - Đọc truyện chữ online miễn phí (REST API)",
