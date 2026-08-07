@@ -2,17 +2,17 @@ load("config.js");
 
 function execute(url, page) {
     if (!page) page = '1';
-    let response = fetch(url + "?page=" + page);
+    var response = fetch(url + "?page=" + page);
     if (response.ok) {
-        let doc = response.html();
+        var doc = response.html();
 
-        let nextPage = /page=(\d+)/.exec(doc.select(".next-page").first().attr("href"));
+        var nextPage = /page=(\d+)/.exec(doc.select(".next-page").first().attr("href"));
         if (nextPage) nextPage = nextPage[1];
         else nextPage = "";
 
-        let books = [];
-        doc.select(".basis-full").first().select(".novel-item").forEach(e => {
-            let type = e.select("a[href^=danh-muc]").text();
+        var books = [];
+        doc.select(".basis-full").first().select(".novel-item").forEach(function(e) {
+            var type = e.select("a[href^=danh-muc]").text();
             if (type) {
                 type = "[" + type + "] ";
             }
@@ -21,7 +21,7 @@ function execute(url, page) {
                 link: e.select("a").first().attr("href"),
                 cover: e.select("img").first().attr("src"),
                 description: e.select(".author ").text() + " - " + e.select(".story-info").text(),
-                host: BASE_URL,
+                host: BASE_URL
             });
         });
 
