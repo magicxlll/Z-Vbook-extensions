@@ -12,13 +12,13 @@ function execute(url) {
     }
     return Response.success({
         name: s.title || "",
-        link: HOST + "/truyen/" + s.slug,
+        link: "/truyen/" + s.slug,
         host: HOST,
         cover: resolveCover(s.coverUrl),
         author: s.author ? s.author.name : "",
         description: s.rewrittenDescription || s.description || "",
-        genres: genres,
-        ongoing: s.status !== "COMPLETED",
+        genre: genres,
+        status: s.status === "COMPLETED" ? "Hoàn thành" : s.status === "ONGOING" ? "Đang ra" : "",
         detail: (s.totalChapters ? "Số chương: " + s.totalChapters : "") + (s.viewCount ? (s.totalChapters ? " | " : "") + "Lượt xem: " + s.viewCount : "")
     });
 }
