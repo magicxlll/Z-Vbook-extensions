@@ -2,8 +2,14 @@ load("config.js");
 
 function execute(key, page) {
     page = page || "1";
-    var fetchUrl = key ? BASE_URL + "/tim-kiem?key=" + encodeURIComponent(key) + "&page=" + page : BASE_URL + "/truyen-hot";
-
+    var fetchUrl = BASE_URL + "/truyen-hot";
+    if (key) {
+        if (key.indexOf("http") === 0) {
+            fetchUrl = key + (key.indexOf("?") !== -1 ? "&" : "?") + "page=" + page;
+        } else {
+            fetchUrl = BASE_URL + "/tim-kiem?key=" + encodeURIComponent(key) + "&page=" + page;
+        }
+    }
     var response = fetchBook(fetchUrl);
     if (!response.ok) return Response.error("Cannot load: " + response.status);
 
