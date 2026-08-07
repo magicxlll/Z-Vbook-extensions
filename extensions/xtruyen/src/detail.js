@@ -1,0 +1,1 @@
+function execute(url) { return Response.success({name: 'Test', cover: '', host: 'https://xtruyen.vn'}); }
