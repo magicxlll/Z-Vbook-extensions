@@ -16,9 +16,13 @@ function execute(url, page) {
             if (type) {
                 type = "[" + type + "] ";
             }
+            var link = e.select("a").first().attr("href");
+            if (link && link.indexOf("http") !== 0 && link.charAt(0) !== "/") {
+                link = "/" + link;
+            }
             books.push({
-                name: type + e.select("h3").text(),
-                link: e.select("a").first().attr("href"),
+                name: type + e.select("h3").text().trim(),
+                link: link,
                 cover: e.select("img").first().attr("src"),
                 description: e.select(".author ").text() + " - " + e.select(".story-info").text(),
                 host: BASE_URL
