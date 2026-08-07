@@ -1,13 +1,14 @@
+load("config.js");
+
 function execute(url) {
-
-    let response = fetch(url);
+    var response = fetchBook(url);
     if (response.ok) {
-        let doc = response.html();
-        if (doc.select("#chapter-content .content-lock").text().length > 10) {
-            return Response.error("Bạn cần trả phí chương này để có thể đọc.")
+        var doc = response.html();
+        doc.select("script, style, iframe, ins, .ads").remove();
+        var contentEl = doc.select(".chapter-content, #chapter-content, .box-chap, .s-content").first();
+        if (contentEl) {
+            return Response.success(contentEl.html());
         }
-
-        return Response.success(doc.select("#chapter-content .s-content").html());
     }
-    return null;
+    return Response.error("Không tải được nội dung chương");
 }
