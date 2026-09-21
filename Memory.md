@@ -3,7 +3,7 @@
 > **Mô tả dự án:** Kho lưu trữ và phát triển Extension (Plugin) cho ứng dụng đọc truyện & xem phim **vBook** (Android/iOS).
 > **Tác giả:** Zitzz (`magicxlll`)
 > **Tham khảo kiến trúc chuẩn:** [Darkrai9x/vbook-extensions](https://github.com/Darkrai9x/vbook-extensions.git)
-> **Cập nhật lần cuối:** 2026-09-21 (Cải tiến Dynamic Book Cover Generator & Sắp xếp Tab Hot cho Truyện Sắc v3)
+> **Cập nhật lần cuối:** 2026-09-21 (Tích hợp thành công extension La Cà Truyện lacatruyen.fit / lacatruyen.ink v1)
 
 ---
 
@@ -58,7 +58,7 @@ extensions/<extension_id>/
 
 ---
 
-## 2. Danh mục & Tình trạng Extensions Hiện tại trong Repo (12 Extensions)
+## 2. Danh mục & Tình trạng Extensions Hiện tại trong Repo (13 Extensions)
 
 | Tên Extension | Thư mục | Loại | Phiên bản | Nguồn (Host) | Đăng ký ở `plugin.json` gốc | Tình trạng & Đánh giá |
 | :--- | :--- | :--- | :---: | :--- | :---: | :--- |
@@ -66,6 +66,7 @@ extensions/<extension_id>/
 | **Bàn Long** | `banlong` | Novel | v22 | `https://blhvip.vn` | ✅ Có | Có fallback WebView. |
 | **Con Đường Bá Chủ** | `conduongbachu` | Novel | v4 | `https://conduongbachu.com` | ✅ Có | Chuyên biệt 3752+ chương, sort số học, lọc audio player TTS và quảng cáo tốt. |
 | **HHTQ Vietsub** | `hhtqvietsub` | Video | v9 | `https://hhtq.hair` | ✅ Có | Mã hóa vBook (`encrypt: true`). Xem Donghua Trung Quốc. |
+| **La Cà Truyện** | `lacatruyen` | Novel | **v1** | `https://lacatruyen.fit` | ✅ Có | Tích hợp giải mã AES `chapters/list-chapters`, lấy SSR NextData, cover CMS và 24 thể loại. Hỗ trợ alias `lacatruyen.ink`. |
 | **Motchill** | `motchill` | Video | v2 | `https://motchille.tv` | ✅ Có | Mã hóa vBook (`encrypt: true`). Phim vietsub/thuyết minh. |
 | **Storya** | `storya` | Novel | v22 | `https://storya.click` | ✅ Có | Dùng REST API JSON trực tiếp tốc độ cao. |
 | **Thư viện Online** | `vietnamthuquan` | Novel | v1 | `http://vietnamthuquan.eu` | ✅ Có | Cào dữ liệu thư quán qua ASPX POST. Đã đăng ký kệ. |
@@ -77,17 +78,16 @@ extensions/<extension_id>/
 
 ---
 
-## 3. Chi tiết Kỹ thuật Xử lý Cover Truyện Sắc (`truyensac.buzz` v3)
+## 3. Chi tiết Kỹ thuật Tích hợp Nguồn La Cà Truyện (`lacatruyen.fit` / `lacatruyen.ink`)
 
-### Bản chất cấu trúc dữ liệu của nguồn truyensac.buzz:
-1. Server `truyensac.buzz` chỉ lưu trữ ảnh bìa thực tế trên CDN (`https://file.truyensac.buzz/files/covers/...`) cho danh mục **Truyện Hot / Truyện Nổi bật**.
-2. Đối với phần lớn truyện mới cập nhật (`/novels`), API trả về `coverUrl: ""` hoặc `null`, và trên CDN cũng chưa tạo file ảnh tương ứng (request đến `covers/{slug}.webp` sẽ trả về HTTP 404).
-3. Khi vBook gặp URL ảnh trả về 404 hoặc rỗng, ứng dụng sẽ chuyển sang render khung giấy trắng/xám mặc định (parchment texture).
-
-### Giải pháp toàn diện v3:
-1. **Ưu tiên CDN Cover thực:** Với các truyện có ảnh bìa thực (`item.coverUrl`), extension chuẩn hóa link và load trực tiếp từ CDN.
-2. **Dynamic Book Cover Generator:** Đối với các truyện chưa có ảnh trên CDN, `resolveCover(cover, name, slug)` tự động tạo ảnh bìa sách thanh lịch tỷ lệ 2:3 với bảng màu phối nghệ thuật (Indigo, Rose, Emerald, Purple, Fuchsia, Slate, Amber) kèm tựa truyện sắc nét, không bao giờ bị 404 hay hiển thị khung thô rỗng.
-3. **Tối ưu trải nghiệm trang chủ (`home.js`):** Đưa tab **Truyện Hot** (nơi có nhiều ảnh bìa thật nhất) lên đầu tiên khi mở extension, giúp giao diện trực quan và bắt mắt ngay từ lần mở đầu tiên.
+### 3.1. Phân tích Tên miền & Reverse Engineering Hệ thống:
+1. **Tên miền hoạt động:** `lacatruyen.ink` là tên miền trước đó (hiện DNS không trỏ hoặc redirect). Hệ thống chính thức đang hoạt động tại `https://lacatruyen.fit`.
+2. **Kiến trúc web:** Sử dụng Next.js Pages Router kết hợp backend Laravel CMS (`https://cms.metruyen.com`).
+3. **Ảnh bìa truyện:** Lưu trữ tại CDN `https://cms.metruyen.com/storage/uploads/{image_name}` (100% truyện đều load ảnh thực, kèm dynamic cover generator fallback).
+4. **Mã hóa Mục lục & Nội dung:**
+   - API mục lục `POST /api/chapters/list-chapters` yêu cầu payload mã hóa AES (`id_story`, `page`, `items_per_page`, `order`) với key sinh động từ seed `T5Hr41U5jKTTrtUOXdYZnyx3wjZEKUoxv16Clwwu4D5zIbd0-q9sdfh`.
+   - Extension tích hợp module `crypto.js` đóng gói gọn gàng CryptoJS AES để thực hiện mã hóa request và giải mã danh sách toàn bộ chương chuẩn xác kèm `slug`.
+   - Nội dung chương được trích xuất trực tiếp từ `previewHtml` trong SSR NextData của trang `/chapter/[slug]` dạng HTML thẻ `<p>` sạch sẽ.
 
 ---
 
@@ -110,3 +110,11 @@ extensions/<extension_id>/
 - Triển khai bộ sinh ảnh bìa bìa sách nghệ thuật (dynamic styled placeholder) theo tên truyện và mã màu phân loại.
 - Sắp xếp lại thứ tự tab trên trang chủ (`Truyện Hot` lên đầu).
 - Đóng gói `plugin.zip`, cập nhật metadata `v3` trong `plugin.json` extension và root, commit & push lên Git remote.
+
+### [2026-09-21] Phiên 5: Tích hợp Nguồn Mới La Cà Truyện (`lacatruyen.fit` / `lacatruyen.ink` v1)
+- Rà quét DNS và phát hiện domain đích hoạt động `lacatruyen.fit`.
+- Bóc tách toàn bộ API Next.js SSR, CMS storage image URL và cơ chế mã hóa AES của La Cà Truyện.
+- Tích hợp module `crypto.js` giải mã mục lục `list-chapters`, bóc tách nội dung chương qua `previewHtml`.
+- Xây dựng đầy đủ 9 scripts (`home.js`, `genre.js` với 24 thể loại, `gen.js`, `detail.js`, `toc.js`, `chap.js`, `search.js`, `page.js`, `crypto.js`).
+- Kiểm thử toàn diện 7 luồng hoạt động 100% thành công.
+- Đóng gói `extensions/lacatruyen/plugin.zip`, đăng ký vào `plugin.json` gốc, commit & push lên `origin/main`.
