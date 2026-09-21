@@ -18,7 +18,7 @@ function execute(url) {
             var payload = {
                 id_story: encryptAES(storyId + ""),
                 page: encryptAES("1"),
-                items_per_page: encryptAES("3000"),
+                items_per_page: encryptAES("5000"),
                 order: encryptAES("asc")
             };
 
@@ -47,6 +47,34 @@ function execute(url) {
                     }
                 } catch (e) {}
             }
+        }
+
+        // Fallback: First & Latest chapters from SSR props
+        var fbList = [];
+        if (p.firstChapter && Array.isArray(p.firstChapter)) {
+            p.firstChapter.forEach(function (c) {
+                if (c.slug) {
+                    fbList.push({
+                        name: (c.title || "Chương 1").trim(),
+                        url: BASE_URL + "/chapter/" + c.slug,
+                        host: BASE_URL
+                    });
+                }
+            });
+        }
+        if (p.latestChapters && Array.isArray(p.latestChapters)) {
+            p.latestChapters.forEach(function (c) {
+                if (c.slug && (!fbList.length || fbList[0].url.indexOf(c.slug) === -1)) {
+                    fbList.push({
+                        name: (c.title || ("Chương " + c.chapter_order)).trim(),
+                        url: BASE_URL + "/chapter/" + c.slug,
+                        host: BASE_URL
+                    });
+                }
+            });
+        }
+        if (fbList.length > 0) {
+            return Response.success(fbList);
         }
     }
 

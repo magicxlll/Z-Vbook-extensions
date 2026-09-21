@@ -66,7 +66,7 @@ extensions/<extension_id>/
 | **Bàn Long** | `banlong` | Novel | v22 | `https://blhvip.vn` | ✅ Có | Có fallback WebView. |
 | **Con Đường Bá Chủ** | `conduongbachu` | Novel | v4 | `https://conduongbachu.com` | ✅ Có | Chuyên biệt 3752+ chương, sort số học, lọc audio player TTS và quảng cáo tốt. |
 | **HHTQ Vietsub** | `hhtqvietsub` | Video | v9 | `https://hhtq.hair` | ✅ Có | Mã hóa vBook (`encrypt: true`). Xem Donghua Trung Quốc. |
-| **La Cà Truyện** | `lacatruyen` | Novel | **v1** | `https://lacatruyen.fit` | ✅ Có | Tích hợp giải mã AES `chapters/list-chapters`, lấy SSR NextData, cover CMS và 24 thể loại. Hỗ trợ alias `lacatruyen.ink`. |
+| **La Cà Truyện** | `lacatruyen` | Novel | **v2** | `https://lacatruyen.fit` | ✅ Có | Fix lỗi mục lục: Khắc phục lỗi PRNG `window.crypto` trong QuickJS bằng Math.random fallback, bỏ qua `page.js` đi thẳng vào `toc.js`. |
 | **Motchill** | `motchill` | Video | v2 | `https://motchille.tv` | ✅ Có | Mã hóa vBook (`encrypt: true`). Phim vietsub/thuyết minh. |
 | **Storya** | `storya` | Novel | v22 | `https://storya.click` | ✅ Có | Dùng REST API JSON trực tiếp tốc độ cao. |
 | **Thư viện Online** | `vietnamthuquan` | Novel | v1 | `http://vietnamthuquan.eu` | ✅ Có | Cào dữ liệu thư quán qua ASPX POST. Đã đăng ký kệ. |
@@ -118,3 +118,10 @@ extensions/<extension_id>/
 - Xây dựng đầy đủ 9 scripts (`home.js`, `genre.js` với 24 thể loại, `gen.js`, `detail.js`, `toc.js`, `chap.js`, `search.js`, `page.js`, `crypto.js`).
 - Kiểm thử toàn diện 7 luồng hoạt động 100% thành công.
 - Đóng gói `extensions/lacatruyen/plugin.zip`, đăng ký vào `plugin.json` gốc, commit & push lên `origin/main`.
+
+### [2026-09-21] Phiên 6: Sửa Lỗi Mục Lục Truyện La Cà Truyện (v2)
+- Phát hiện nguyên nhân gốc rễ: `CryptoJS.lib.WordArray.random` cố gắng truy cập `window.crypto` (vốn không tồn tại trong môi trường nhúng QuickJS / Duktape của vBook), dẫn đến ném ngoại lệ khi mã hóa payload `list-chapters`.
+- Khắc phục bằng cách override `CryptoJS.lib.WordArray.random` sử dụng `Math.random` an toàn và tương thích 100% với engine JS di động.
+- Bỏ qua routing trung gian `page.js`, chuyển thẳng router `plugin.json` vào `toc.js` để vBook nạp toàn bộ mục lục ngay lập tức.
+- Bổ sung cơ chế fallback bóc tách danh sách chương từ props SSR `firstChapter` và `latestChapters`.
+- Nâng version lên `v2`, đóng gói lại `plugin.zip`, cập nhật `plugin.json` gốc, commit & push lên `origin/main`.
