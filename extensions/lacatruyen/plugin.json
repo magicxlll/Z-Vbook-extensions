@@ -2,7 +2,7 @@
   "metadata": {
     "name": "La Cà Truyện",
     "author": "Zitzz",
-    "version": 2,
+    "version": 3,
     "source": "https://lacatruyen.fit",
     "regexp": "https?:\\/\\/(?:www\\.)?lacatruyen\\.(?:fit|ink|me|xyz|net|com|pro|online|club|store|shop|work)\\/.*$",
     "description": "Đọc truyện chữ online, tiểu thuyết hay miễn phí trên La Cà Truyện (lacatruyen.fit / lacatruyen.ink)",
@@ -15,6 +15,7 @@
     "genre": "genre.js",
     "detail": "detail.js",
     "search": "search.js",
+    "page": "page.js",
     "toc": "toc.js",
     "chap": "chap.js"
   }
