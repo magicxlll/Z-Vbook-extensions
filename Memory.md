@@ -3,7 +3,7 @@
 > **Mô tả dự án:** Kho lưu trữ và phát triển Extension (Plugin) cho ứng dụng đọc truyện & xem phim **vBook** (Android/iOS).
 > **Tác giả:** Zitzz (`magicxlll`)
 > **Tham khảo kiến trúc chuẩn:** [Darkrai9x/vbook-extensions](https://github.com/Darkrai9x/vbook-extensions.git)
-> **Cập nhật lần cuối:** 2026-09-21 (Tích hợp nguồn Truyện Sắc `truyensac.buzz`)
+> **Cập nhật lần cuối:** 2026-09-21 (Sửa lỗi lấy ảnh bìa / cover cho extension Truyện Sắc v2)
 
 ---
 
@@ -70,28 +70,24 @@ extensions/<extension_id>/
 | **Storya** | `storya` | Novel | v22 | `https://storya.click` | ✅ Có | Dùng REST API JSON trực tiếp tốc độ cao. |
 | **Thư viện Online** | `vietnamthuquan` | Novel | v1 | `http://vietnamthuquan.eu` | ✅ Có | Cào dữ liệu thư quán qua ASPX POST. Đã đăng ký kệ. |
 | **Truyện Full** | `truyenfull` | Novel | v2 | `https://truyenfull.vision` | ✅ Có | Hoạt động tốt. |
-| **Truyện Sắc** | `truyensac` | Novel | v1 | `https://truyensac.buzz` | ✅ Có | Khai thác trực tiếp REST API `api.truyensac.buzz`, TOC phân trang tự động, tốc độ siêu nhanh. |
+| **Truyện Sắc** | `truyensac` | Novel | **v2** | `https://truyensac.buzz` | ✅ Có | Fix triệt để lấy cover truyện thực từ CDN / fallback slug, loại bỏ logo mặc định. |
 | **Vireal** | `vireal` | Novel | v4 | `https://vireal.vn` | ✅ Có | Parse dữ liệu SSR Json block. Đã đăng ký kệ. |
 | **XTruyen Test** | `xtruyen` | Novel | v2 | `https://xtruyen.vn` | ✅ Có | Theme Madara (WP), lấy TOC qua `admin-ajax.php`. |
 | **YanHH3D** | `yanhh3d` | Video | v2 | `https://yanhh3d.ee` | ✅ Có | Mã hóa vBook (`encrypt: true`). Hoạt hình 3D. |
 
 ---
 
-## 3. Chi tiết Kỹ thuật Nguồn Mới: Truyện Sắc (`truyensac.buzz`)
+## 3. Chi tiết Kỹ thuật Sửa lỗi Cover Truyện Sắc (`truyensac.buzz` v2)
 
-### 3.1. Kiến trúc Nguồn
-- **Frontend Web:** Next.js App Router (SSR + Client Hydration).
-- **Backend API:** `https://api.truyensac.buzz` (REST JSON endpoints).
-- **CDN Media:** `https://file.truyensac.buzz/files/` và `https://truyensac.buzz/imgs/`.
+### Nguyên nhân lỗi:
+1. `truyensac.buzz` đặt thẻ `<meta property="og:image" content="https://truyensac.buzz/imgs/logo.webp">` trên hầu hết các trang chi tiết, dẫn đến việc `detail.js` trước đây luôn trích xuất logo trang web thay vì ảnh bìa truyện.
+2. Thẻ `<img>` đầu tiên trên trang HTML luôn là logo menu đầu trang.
+3. Trong API danh sách, nhiều truyện trả về `coverUrl: ""` hoặc `null`.
 
-### 3.2. Mapping Endpoints & Scripts
-- `home.js`: 5 danh mục khám phá (`/novels/latest`, `/novels/hot`, `/novels?status=completed`, `/novels?status=ongoing`, `/novels`).
-- `genre.js`: Lấy 86 thể loại trực tiếp từ `https://api.truyensac.buzz/genres`.
-- `gen.js`: Phân trang danh sách (`page=1, 2, ...&limit=20`), hỗ trợ chuyển đổi từ link danh mục web sang API tương ứng.
-- `search.js`: Tìm kiếm từ khóa qua `https://api.truyensac.buzz/novels?keyword=:key&page=:page&limit=20`.
-- `detail.js`: Lấy thông tin truyện, ảnh bìa, tác giả, trạng thái, thể loại từ SSR HTML / Schema LD+JSON.
-- `toc.js`: Tự động trích xuất `novelId` và duyệt API pagination `https://api.truyensac.buzz/novels/:novelId/chapters?page=P&limit=50&sort=asc` lấy toàn bộ 100% chương (kể cả truyện 1000+ chương).
-- `chap.js`: Lấy nội dung chương trực tiếp dạng JSON từ `https://api.truyensac.buzz/chapters/:id`, chuẩn hóa ngắt dòng HTML `<br>`, cực kỳ sạch sẽ và tốc độ tải tức thì.
+### Giải pháp khắc phục (v2):
+1. **Trích xuất chính xác ảnh truyện:** Ưu tiên selector `img[itemprop='image']`, lọc bỏ hoàn toàn `logo.webp` và `no-image.webp`.
+2. **Chuẩn hóa CDN URL:** Tự động sửa lỗi double-slash (`files//covers/` -> `files/covers/`).
+3. **Auto CDN Slug Resolution:** Khi API hoặc HTML không có cover sẵn, `resolveCover(cover, slug)` tự động ánh xạ đến `https://file.truyensac.buzz/files/covers/{slug}.webp` để tải ảnh bìa gốc từ máy chủ CDN.
 
 ---
 
@@ -103,8 +99,9 @@ extensions/<extension_id>/
 
 ### [2026-09-21] Phiên 2: Tích hợp nguồn Truyện Sắc (`truyensac.buzz`)
 - Phân tích kiến trúc Next.js và bóc tách REST API ngầm `https://api.truyensac.buzz`.
-- Phát triển hoàn chỉnh 7 scripts cho extension `truyensac` (`config.js`, `home.js`, `genre.js`, `gen.js`, `detail.js`, `search.js`, `toc.js`, `chap.js`, `page.js`).
-- Tải icon chính thức và đóng gói `extensions/truyensac/plugin.zip`.
-- Đăng ký `truyensac`, `vietnamthuquan`, `vireal` vào file `plugin.json` gốc của kệ sách.
-- Chạy toàn bộ test suite giả lập runtime vBook: 100% pass.
-- Tiến hành commit và push lên Git remote `origin/main`.
+- Phát triển hoàn chỉnh 7 scripts cho extension `truyensac`.
+
+### [2026-09-21] Phiên 3: Fix lỗi lấy Cover Truyện Sắc (v2)
+- Sửa lỗi `resolveCover` và `detail.js` loại bỏ triệt để việc nhầm lẫn với `logo.webp` và `no-image.webp`.
+- Bổ sung cơ chế auto resolve cover CDN qua `covers/{slug}.webp`.
+- Bump version lên `v2`, build lại `plugin.zip`, cập nhật `plugin.json` gốc, commit & push lên `origin/main`.

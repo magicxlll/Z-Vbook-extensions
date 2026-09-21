@@ -41,8 +41,14 @@ function fetchBook(url, options) {
     return fetch(url, options);
 }
 
-function resolveCover(cover) {
-    if (!cover) return BASE_URL + "/imgs/no-image.webp";
+function resolveCover(cover, slug) {
+    if (!cover || cover.indexOf("logo.webp") > -1 || cover.indexOf("no-image.webp") > -1) {
+        if (slug) {
+            return CDN_URL + "covers/" + slug + ".webp";
+        }
+        return "";
+    }
+    cover = (cover + "").replace(/files\/\/+covers\//g, "files/covers/");
     if (cover.indexOf("http") === 0) return cover;
     if (cover.indexOf("/") === 0) return BASE_URL + cover;
     return CDN_URL + cover;
@@ -59,7 +65,7 @@ function parseStories(arr) {
         if (!name || !slug) continue;
 
         var link = BASE_URL + "/truyen/" + slug;
-        var cover = resolveCover(item.coverUrl);
+        var cover = resolveCover(item.coverUrl, slug);
         var desc = "";
         if (item.authorName) {
             desc = "Tác giả: " + item.authorName;

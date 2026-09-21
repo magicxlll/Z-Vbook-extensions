@@ -7,19 +7,27 @@ function execute(url) {
     if (!res || !res.ok) return Response.error("Không thể tải thông tin truyện");
 
     var doc = res.html();
+    var slugMatch = url.match(/\/truyen\/([^\/\?]+)/);
+    var slug = slugMatch ? slugMatch[1] : "";
 
     // Tên truyện
     var nameEl = doc.select("h1").first();
     var name = (nameEl ? nameEl.text() : "").trim();
 
-    // Ảnh bìa
-    var coverEl = doc.select("meta[property='og:image']").first();
-    var cover = coverEl ? (coverEl.attr("content") || "") : "";
-    if (!cover) {
-        var imgEl = doc.select("img").first();
-        cover = imgEl ? (imgEl.attr("src") || imgEl.attr("data-src") || "") : "";
+    // Ảnh bìa chính xác
+    var cover = "";
+    var imgEl = doc.select("img[itemprop='image']").first();
+    if (imgEl) {
+        cover = imgEl.attr("src") || imgEl.attr("data-src") || "";
     }
-    cover = resolveCover(cover);
+    if (!cover || cover.indexOf("logo.webp") > -1 || cover.indexOf("no-image.webp") > -1) {
+        var ogEl = doc.select("meta[property='og:image']").first();
+        var ogVal = ogEl ? ogEl.attr("content") : "";
+        if (ogVal && ogVal.indexOf("logo.webp") === -1 && ogVal.indexOf("no-image.webp") === -1) {
+            cover = ogVal;
+        }
+    }
+    cover = resolveCover(cover, slug);
 
     // Tác giả
     var author = "";
