@@ -27,7 +27,7 @@ function execute(url) {
             cover = ogVal;
         }
     }
-    cover = resolveCover(cover, slug);
+    cover = resolveCover(cover, name, slug);
 
     // Tác giả
     var author = "";

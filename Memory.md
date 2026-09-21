@@ -3,7 +3,7 @@
 > **Mô tả dự án:** Kho lưu trữ và phát triển Extension (Plugin) cho ứng dụng đọc truyện & xem phim **vBook** (Android/iOS).
 > **Tác giả:** Zitzz (`magicxlll`)
 > **Tham khảo kiến trúc chuẩn:** [Darkrai9x/vbook-extensions](https://github.com/Darkrai9x/vbook-extensions.git)
-> **Cập nhật lần cuối:** 2026-09-21 (Sửa lỗi lấy ảnh bìa / cover cho extension Truyện Sắc v2)
+> **Cập nhật lần cuối:** 2026-09-21 (Cải tiến Dynamic Book Cover Generator & Sắp xếp Tab Hot cho Truyện Sắc v3)
 
 ---
 
@@ -70,24 +70,24 @@ extensions/<extension_id>/
 | **Storya** | `storya` | Novel | v22 | `https://storya.click` | ✅ Có | Dùng REST API JSON trực tiếp tốc độ cao. |
 | **Thư viện Online** | `vietnamthuquan` | Novel | v1 | `http://vietnamthuquan.eu` | ✅ Có | Cào dữ liệu thư quán qua ASPX POST. Đã đăng ký kệ. |
 | **Truyện Full** | `truyenfull` | Novel | v2 | `https://truyenfull.vision` | ✅ Có | Hoạt động tốt. |
-| **Truyện Sắc** | `truyensac` | Novel | **v2** | `https://truyensac.buzz` | ✅ Có | Fix triệt để lấy cover truyện thực từ CDN / fallback slug, loại bỏ logo mặc định. |
+| **Truyện Sắc** | `truyensac` | Novel | **v3** | `https://truyensac.buzz` | ✅ Có | Dynamic Book Cover nghệ thuật cho truyện thiếu cover + Ưu tiên hiển thị tab Truyện Hot có sẵn ảnh CDN thực. |
 | **Vireal** | `vireal` | Novel | v4 | `https://vireal.vn` | ✅ Có | Parse dữ liệu SSR Json block. Đã đăng ký kệ. |
 | **XTruyen Test** | `xtruyen` | Novel | v2 | `https://xtruyen.vn` | ✅ Có | Theme Madara (WP), lấy TOC qua `admin-ajax.php`. |
 | **YanHH3D** | `yanhh3d` | Video | v2 | `https://yanhh3d.ee` | ✅ Có | Mã hóa vBook (`encrypt: true`). Hoạt hình 3D. |
 
 ---
 
-## 3. Chi tiết Kỹ thuật Sửa lỗi Cover Truyện Sắc (`truyensac.buzz` v2)
+## 3. Chi tiết Kỹ thuật Xử lý Cover Truyện Sắc (`truyensac.buzz` v3)
 
-### Nguyên nhân lỗi:
-1. `truyensac.buzz` đặt thẻ `<meta property="og:image" content="https://truyensac.buzz/imgs/logo.webp">` trên hầu hết các trang chi tiết, dẫn đến việc `detail.js` trước đây luôn trích xuất logo trang web thay vì ảnh bìa truyện.
-2. Thẻ `<img>` đầu tiên trên trang HTML luôn là logo menu đầu trang.
-3. Trong API danh sách, nhiều truyện trả về `coverUrl: ""` hoặc `null`.
+### Bản chất cấu trúc dữ liệu của nguồn truyensac.buzz:
+1. Server `truyensac.buzz` chỉ lưu trữ ảnh bìa thực tế trên CDN (`https://file.truyensac.buzz/files/covers/...`) cho danh mục **Truyện Hot / Truyện Nổi bật**.
+2. Đối với phần lớn truyện mới cập nhật (`/novels`), API trả về `coverUrl: ""` hoặc `null`, và trên CDN cũng chưa tạo file ảnh tương ứng (request đến `covers/{slug}.webp` sẽ trả về HTTP 404).
+3. Khi vBook gặp URL ảnh trả về 404 hoặc rỗng, ứng dụng sẽ chuyển sang render khung giấy trắng/xám mặc định (parchment texture).
 
-### Giải pháp khắc phục (v2):
-1. **Trích xuất chính xác ảnh truyện:** Ưu tiên selector `img[itemprop='image']`, lọc bỏ hoàn toàn `logo.webp` và `no-image.webp`.
-2. **Chuẩn hóa CDN URL:** Tự động sửa lỗi double-slash (`files//covers/` -> `files/covers/`).
-3. **Auto CDN Slug Resolution:** Khi API hoặc HTML không có cover sẵn, `resolveCover(cover, slug)` tự động ánh xạ đến `https://file.truyensac.buzz/files/covers/{slug}.webp` để tải ảnh bìa gốc từ máy chủ CDN.
+### Giải pháp toàn diện v3:
+1. **Ưu tiên CDN Cover thực:** Với các truyện có ảnh bìa thực (`item.coverUrl`), extension chuẩn hóa link và load trực tiếp từ CDN.
+2. **Dynamic Book Cover Generator:** Đối với các truyện chưa có ảnh trên CDN, `resolveCover(cover, name, slug)` tự động tạo ảnh bìa sách thanh lịch tỷ lệ 2:3 với bảng màu phối nghệ thuật (Indigo, Rose, Emerald, Purple, Fuchsia, Slate, Amber) kèm tựa truyện sắc nét, không bao giờ bị 404 hay hiển thị khung thô rỗng.
+3. **Tối ưu trải nghiệm trang chủ (`home.js`):** Đưa tab **Truyện Hot** (nơi có nhiều ảnh bìa thật nhất) lên đầu tiên khi mở extension, giúp giao diện trực quan và bắt mắt ngay từ lần mở đầu tiên.
 
 ---
 
@@ -104,4 +104,9 @@ extensions/<extension_id>/
 ### [2026-09-21] Phiên 3: Fix lỗi lấy Cover Truyện Sắc (v2)
 - Sửa lỗi `resolveCover` và `detail.js` loại bỏ triệt để việc nhầm lẫn với `logo.webp` và `no-image.webp`.
 - Bổ sung cơ chế auto resolve cover CDN qua `covers/{slug}.webp`.
-- Bump version lên `v2`, build lại `plugin.zip`, cập nhật `plugin.json` gốc, commit & push lên `origin/main`.
+
+### [2026-09-21] Phiên 4: Triển khai Dynamic Book Cover & Tối ưu Tab Hot (v3)
+- Phân tích sâu nguyên nhân CDN 404 cho truyện mới và cơ chế fallback parchment của vBook.
+- Triển khai bộ sinh ảnh bìa bìa sách nghệ thuật (dynamic styled placeholder) theo tên truyện và mã màu phân loại.
+- Sắp xếp lại thứ tự tab trên trang chủ (`Truyện Hot` lên đầu).
+- Đóng gói `plugin.zip`, cập nhật metadata `v3` trong `plugin.json` extension và root, commit & push lên Git remote.

@@ -2,7 +2,7 @@
   "metadata": {
     "name": "Truyện Sắc",
     "author": "Zitzz",
-    "version": 2,
+    "version": 3,
     "source": "https://truyensac.buzz",
     "regexp": "https?:\\/\\/(?:www\\.)?truyensac\\.buzz\\/.*$",
     "description": "Đọc truyện Cao H, Sắc Hiệp chọn lọc trên TruyenSac.buzz",
