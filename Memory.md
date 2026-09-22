@@ -3,7 +3,7 @@
 > **Mô tả dự án:** Kho lưu trữ và phát triển Extension (Plugin) cho ứng dụng đọc truyện & xem phim **vBook** (Android/iOS).
 > **Tác giả:** Zitzz (`magicxlll`)
 > **Tham khảo kiến trúc chuẩn:** [Darkrai9x/vbook-extensions](https://github.com/Darkrai9x/vbook-extensions.git)
-> **Cập nhật lần cuối:** 2026-09-22 (Tích hợp nguồn mới Hắc Hoàng Đại Đế hachoangdaide.online v1)
+> **Cập nhật lần cuối:** 2026-09-22 (Tích hợp nguồn mới Kho Truyện Chữ khotruyenchu.fun v1)
 
 ---
 
@@ -58,7 +58,7 @@ extensions/<extension_id>/
 
 ---
 
-## 2. Danh mục & Tình trạng Extensions Hiện tại trong Repo (16 Extensions)
+## 2. Danh mục & Tình trạng Extensions Hiện tại trong Repo (17 Extensions)
 
 | Tên Extension | Thư mục | Loại | Phiên bản | Nguồn (Host) | Đăng ký ở `plugin.json` gốc | Tình trạng & Đánh giá |
 | :--- | :--- | :--- | :---: | :--- | :---: | :--- |
@@ -67,6 +67,7 @@ extensions/<extension_id>/
 | **Con Đường Bá Chủ** | `conduongbachu` | Novel | v4 | `https://conduongbachu.com` | ✅ Có | Hoạt động tốt. |
 | **Hắc Hoàng Đại Đế** | `hachoangdaide` | Novel | **v1** | `https://hachoangdaide.online` | ✅ Có | Laravel SuuStore CMS + JSON API mục lục 5.000 chương/req + Đọc chương qua Blade JSON.parse sạch 100%. |
 | **HHTQ Vietsub** | `hhtqvietsub` | Video | v9 | `https://hhtq.hair` | ✅ Có | Mã hóa vBook (`encrypt: true`). Hoạt hình 3D. |
+| **Kho Truyện Chữ** | `khotruyenchu` | Novel | **v1** | `https://khotruyenchu.fun` | ✅ Có | WordPress Blocksy + REST API bo_truyen search + Phân trang mục lục taxonomy + Đóng gói POSIX Zip. |
 | **La Cà Truyện** | `lacatruyen` | Novel | **v4** | `https://lacatruyen.fit` | ✅ Có | Next.js SSR + API AES-256-CBC Lookup Table O(1) nhúng trực tiếp config.js siêu tốc + 4 tầng fallback mục lục. |
 | **Motchill** | `motchill` | Video | v2 | `https://motchille.tv` | ✅ Có | Mã hóa vBook (`encrypt: true`). Phim vietsub/thuyết minh. |
 | **Storya** | `storya` | Novel | v22 | `https://storya.click` | ✅ Có | Dùng REST API JSON trực tiếp tốc độ cao. |
@@ -256,4 +257,45 @@ extensions/<extension_id>/
   3. **Đóng gói & Đăng ký:**
      - Đóng gói `extensions/hachoangdaide/plugin.zip` (30.8 KB) bằng lệnh `tar -a -cf` đảm bảo chuẩn POSIX (`hasBackslash = false`).
      - Đăng ký vào root `plugin.json` (tổng cộng **16 extensions**).
+     - Commit và push lên Git remote `origin/main`.
+
+### [2026-09-22] Phiên 13: Phân tích & Tích hợp Nguồn Mới Kho Truyện Chữ (`khotruyenchu.fun` v1)
+- **Phân tích Kiến trúc Hệ thống:**
+  1. **Nền tảng & Theme:** WordPress kết hợp theme Blocksy, LiteSpeed Cache và Cloudflare CDN. Trang web tự xưng là "Tàng Kinh Các Của Giới Tu Chân" chuyên truyện dịch/convert thể loại Tiên hiệp, Huyền huyễn, Qidian, Đô thị.
+  2. **Hệ thống Ảnh Bìa & Dữ liệu:**
+     - Ảnh bìa lưu trữ tại `/wp-content/uploads/...` định dạng `.jpg`, `.jpeg`, `.webp`.
+     - Mỗi trang truyện nhúng sẵn thẻ Schema JSON-LD `@type: CreativeWorkSeries` chứa chính xác tên truyện (`name`), ảnh bìa (`image`), tóm tắt (`description`).
+     - Tác giả được liên kết qua `/tac-gia/?tg=...`, trạng thái hiển thị qua text "Tình trạng: Đang tiến hành / Hoàn thành".
+  3. **Kiến trúc Mục Lục & Phân Trang (TOC & Pagination):**
+     - Trang truyện `https://khotruyenchu.fun/truyen/{slug}/` đóng vai trò là archive/taxonomy term `bo_truyen`.
+     - Mỗi trang chứa 50 chương trong thẻ `<article class="entry-card ...">` với liên kết `<h2 class="entry-title"><a href="...">...</a></h2>`.
+     - Thứ tự chương được sắp xếp tăng dần theo thời gian (ASC: Chương 1 -> Chương 50).
+     - Phân trang mục lục qua `nav.ct-pagination` dạng `page/2/`, `page/3/`, v.v.
+     - `page.js` bóc tách `maxPage` và sinh danh sách đầy đủ URL các trang mục lục.
+     - `toc.js` cào sạch sẽ từng chương theo từng trang, không bị lẫn các nút "Đọc từ đầu" hay "Chương mới nhất".
+  4. **Nội dung Đọc Chương (Chap):**
+     - Text truyện sạch 100% trong `.entry-content`, các đoạn văn bản cấu trúc bằng `<p>`.
+     - Đã loại bỏ triệt để các rác giao diện: `.story-navigation`, `.reading-tools-bar`, `.story-toc-content`, `.code-block`, comment wpDiscuz và share box.
+  5. **Tìm kiếm (Search):**
+     - Khám phá endpoint REST API WordPress: `GET /wp-json/wp/v2/bo_truyen?search={keyword}&page={page}&per_page=20`.
+     - Trả về danh sách chuẩn xác 100% các bộ truyện (thay vì tìm kiếm post/chương như web search mặc định).
+     - Trang bị fallback cào HTML `/?s={keyword}` gom nhóm theo class `bo_truyen-{slug}`.
+- **Giải pháp Kỹ thuật & Triển khai Extension:**
+  1. **Đầy đủ 9 scripts:**
+     - `config.js`: `BASE_URL`, `cleanUrl`, `resolveCover`, `fetchBook`, `fetchJson` kèm `DEFAULT_HEADERS` đầy đủ User-Agent chống 403 Forbidden.
+     - `home.js`: 4 tab khám phá (`Truyện mới của Kho`, `Top Qidian`, `Độc giả yêu cầu`, `Mới cập nhật`).
+     - `genre.js`: 10 thể loại tu chân, đô thị, dã sử, hệ thống, khoa huyễn, v.v.
+     - `gen.js`: Parser phân trang danh sách truyện `.home-story-card` từ trang chủ và thể loại.
+     - `detail.js`: Bóc tách tên truyện (Schema + H1), tác giả, ảnh bìa, trạng thái, thể loại và tóm tắt truyện.
+     - `page.js`: Tự động nhận diện phân trang mục lục và sinh danh sách các trang `page/{n}/`.
+     - `toc.js`: Bóc tách trọn vẹn danh sách chương từ các `article.entry-card`.
+     - `chap.js`: Lọc sạch sẽ nội dung văn bản chương, dọn dẹp các thanh công cụ và quảng cáo.
+     - `search.js`: Tìm kiếm REST API tốc độ cao, fallback HTML search.
+  2. **Biểu tượng Icon:** Tải logo chuẩn chính thức 300x300 PNG lưu vào `extensions/khotruyenchu/icon.png`.
+  3. **Kiểm thử Toàn diện (End-to-End Simulation):**
+     - Xây dựng test suite mô phỏng vBook runtime.
+     - 8/8 test cases pass 100% (home, genre, gen, detail, page, toc, chap, search).
+  4. **Đóng gói & Đăng ký:**
+     - Đóng gói `extensions/khotruyenchu/plugin.zip` (27.7 KB) bằng lệnh `tar -a -cf` đảm bảo chuẩn POSIX (`hasBackslash = false`).
+     - Đăng ký vào root `plugin.json` (tổng cộng **17 extensions**).
      - Commit và push lên Git remote `origin/main`.

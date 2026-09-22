@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "name": "Kho Truyện Chữ",
+    "author": "Zitzz",
+    "version": 1,
+    "source": "https://khotruyenchu.fun",
+    "regexp": "https?:\\/\\/(?:www\\.)?khotruyenchu\\.fun\\/.*$",
+    "description": "Đọc truyện online tại Kho Truyện Chữ (khotruyenchu.fun) - Tàng Kinh Các Của Giới Tu Chân",
+    "locale": "vi_VN",
+    "language": "javascript",
+    "type": "novel"
+  },
+  "script": {
+    "home": "home.js",
+    "genre": "genre.js",
+    "detail": "detail.js",
+    "page": "page.js",
+    "toc": "toc.js",
+    "chap": "chap.js",
+    "search": "search.js"
+  }
+}
