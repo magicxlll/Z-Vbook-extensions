@@ -2,9 +2,9 @@
   "metadata": {
     "name": "Tiên Hiệp Lâu",
     "author": "Zitzz",
-    "version": 1,
+    "version": 2,
     "source": "https://tienhiep.vercel.app",
-    "regexp": "(https?:\\/\\/)?tienhiep\\.vercel\\.app\\/books\\/([a-zA-Z0-9_-]+)",
+    "regexp": "https?:\\/\\/(?:www\\.)?tienhiep\\.vercel\\.app\\/.*$",
     "description": "Đọc truyện tiên hiệp, tu chân, kiếm hiệp chọn lọc kinh điển trên Tiên Hiệp Lâu",
     "locale": "vi_VN",
     "language": "javascript",

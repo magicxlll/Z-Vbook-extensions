@@ -3,7 +3,7 @@
 > **Mô tả dự án:** Kho lưu trữ và phát triển Extension (Plugin) cho ứng dụng đọc truyện & xem phim **vBook** (Android/iOS).
 > **Tác giả:** Zitzz (`magicxlll`)
 > **Tham khảo kiến trúc chuẩn:** [Darkrai9x/vbook-extensions](https://github.com/Darkrai9x/vbook-extensions.git)
-> **Cập nhật lần cuối:** 2026-09-22 (Tích hợp nguồn mới Tiên Hiệp Lâu tienhiep.vercel.app v1)
+> **Cập nhật lần cuối:** 2026-09-22 (Khắc phục lỗi không add được Extension Tiên Hiệp Lâu vào vBook - POSIX Zip Packaging v2)
 
 ---
 
@@ -70,7 +70,7 @@ extensions/<extension_id>/
 | **Motchill** | `motchill` | Video | v2 | `https://motchille.tv` | ✅ Có | Mã hóa vBook (`encrypt: true`). Phim vietsub/thuyết minh. |
 | **Storya** | `storya` | Novel | v22 | `https://storya.click` | ✅ Có | Dùng REST API JSON trực tiếp tốc độ cao. |
 | **Thư viện Online** | `vietnamthuquan` | Novel | v1 | `http://vietnamthuquan.eu` | ✅ Có | Cào dữ liệu thư quán qua ASPX POST. Đã đăng ký kệ. |
-| **Tiên Hiệp Lâu** | `tienhiep` | Novel | **v1** | `https://tienhiep.vercel.app` | ✅ Có | Next.js App Router + Supabase Storage WebP Cover + JSON API phân trang mục lục 100 chương/req + Nội dung truyện thật 100%. |
+| **Tiên Hiệp Lâu** | `tienhiep` | Novel | **v2** | `https://tienhiep.vercel.app` | ✅ Có | Next.js App Router + Supabase Storage WebP Cover + JSON API phân trang mục lục 100 chương/req + Đóng gói POSIX Zip v2. |
 | **Truyện Chữ Hay** | `truyenchuhay` | Novel | **v1** | `https://truyenchuhay.org` | ✅ Có | Next.js SSR + API v2 lấy trọn vẹn 100% mục lục (844 chương/req). Khuyến nghị: nguồn gốc có Traffic Gate cho chương. |
 | **Truyện Full** | `truyenfull` | Novel | v2 | `https://truyenfull.vision` | ✅ Có | Hoạt động tốt. |
 | **Truyện Sắc** | `truyensac` | Novel | **v3** | `https://truyensac.buzz` | ✅ Có | Dynamic Book Cover nghệ thuật cho truyện thiếu cover + Ưu tiên hiển thị tab Truyện Hot có sẵn ảnh CDN thực. |
@@ -217,6 +217,18 @@ extensions/<extension_id>/
      - Đóng gói `extensions/tienhiep/plugin.zip` (10.9 KB).
      - Đăng ký extension vào `plugin.json` gốc (tổng cộng 15 extensions).
      - Đẩy toàn bộ thay đổi lên Git remote `origin/main`.
+
+### [2026-09-22] Phiên 11: Sửa Lỗi Không Cài Đặt Được Extension Tiên Hiệp Lâu (v2 - POSIX Zip Packaging)
+- **Xác định Nguyên nhân Gốc rễ:**
+  - Tiện ích hiển thị trong kho extension của vBook (do root `plugin.json` hợp lệ) nhưng người dùng bấm cài đặt/add thì thất bại.
+  - Kiểm tra cấu trúc file nhị phân `extensions/tienhiep/plugin.zip`: Lệnh `Compress-Archive` của Windows PowerShell đã nén đường dẫn theo định dạng DOS/Windows với dấu backslash `\` (`src\chap.js`, `src\config.js`, ...).
+  - Ứng dụng vBook chạy trên Android/iOS (nhân Linux/Unix): Khi giải nén, thư viện unzip không nhận diện `\` là dấu phân cách thư mục, không tạo ra thư mục `src/` mà tạo file có tên `"src\chap.js"` hoặc báo lỗi path không hợp lệ. Khi vBook khởi tạo extension và tìm kiếm `src/home.js`, hệ thống gặp ngoại lệ `FileNotFoundException` và hủy quá trình cài đặt.
+- **Biện pháp Khắc phục Triệt để:**
+  1. **Đóng gói chuẩn POSIX (`tar -a -cf`):** Chuyển sang đóng gói bằng lệnh `tar` chuẩn quốc tế, đảm bảo 100% các entry trong zip đều dùng forward slash `/` (`src/chap.js`, `src/config.js`, ...) và có entry thư mục `src/`. Đã kiểm tra nhị phân xác nhận `hasBackslash = false`.
+  2. **Nâng phiên bản `version: 2`:** Tăng `version` từ 1 lên 2 trong cả `extensions/tienhiep/plugin.json` và `plugin.json` ở root repository để xóa cache lỗi trên thiết bị và kích hoạt tải lại gói cài đặt mới.
+  3. **Chuẩn hóa URL Regexp:** Cập nhật `regexp: "https?:\\/\\/(?:www\\.)?tienhiep\\.vercel\\.app\\/.*$"` chuẩn hóa theo quy ước chung của repo.
+  4. **Commit & Push:** Đẩy toàn bộ thay đổi lên Git remote `origin/main`.
+
 
 
 
