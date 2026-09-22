@@ -3,7 +3,7 @@
 > **Mô tả dự án:** Kho lưu trữ và phát triển Extension (Plugin) cho ứng dụng đọc truyện & xem phim **vBook** (Android/iOS).
 > **Tác giả:** Zitzz (`magicxlll`)
 > **Tham khảo kiến trúc chuẩn:** [Darkrai9x/vbook-extensions](https://github.com/Darkrai9x/vbook-extensions.git)
-> **Cập nhật lần cuối:** 2026-09-21 (Khắc phục triệt để lỗi mục lục La Cà Truyện lacatruyen.fit / lacatruyen.ink v3 bằng Pure ES5 AES Engine)
+> **Cập nhật lần cuối:** 2026-09-22 (Tích hợp nguồn mới Tiên Hiệp Lâu tienhiep.vercel.app v1)
 
 ---
 
@@ -58,7 +58,7 @@ extensions/<extension_id>/
 
 ---
 
-## 2. Danh mục & Tình trạng Extensions Hiện tại trong Repo (14 Extensions)
+## 2. Danh mục & Tình trạng Extensions Hiện tại trong Repo (15 Extensions)
 
 | Tên Extension | Thư mục | Loại | Phiên bản | Nguồn (Host) | Đăng ký ở `plugin.json` gốc | Tình trạng & Đánh giá |
 | :--- | :--- | :--- | :---: | :--- | :---: | :--- |
@@ -70,6 +70,7 @@ extensions/<extension_id>/
 | **Motchill** | `motchill` | Video | v2 | `https://motchille.tv` | ✅ Có | Mã hóa vBook (`encrypt: true`). Phim vietsub/thuyết minh. |
 | **Storya** | `storya` | Novel | v22 | `https://storya.click` | ✅ Có | Dùng REST API JSON trực tiếp tốc độ cao. |
 | **Thư viện Online** | `vietnamthuquan` | Novel | v1 | `http://vietnamthuquan.eu` | ✅ Có | Cào dữ liệu thư quán qua ASPX POST. Đã đăng ký kệ. |
+| **Tiên Hiệp Lâu** | `tienhiep` | Novel | **v1** | `https://tienhiep.vercel.app` | ✅ Có | Next.js App Router + Supabase Storage WebP Cover + JSON API phân trang mục lục 100 chương/req + Nội dung truyện thật 100%. |
 | **Truyện Chữ Hay** | `truyenchuhay` | Novel | **v1** | `https://truyenchuhay.org` | ✅ Có | Next.js SSR + API v2 lấy trọn vẹn 100% mục lục (844 chương/req). Khuyến nghị: nguồn gốc có Traffic Gate cho chương. |
 | **Truyện Full** | `truyenfull` | Novel | v2 | `https://truyenfull.vision` | ✅ Có | Hoạt động tốt. |
 | **Truyện Sắc** | `truyensac` | Novel | **v3** | `https://truyensac.buzz` | ✅ Có | Dynamic Book Cover nghệ thuật cho truyện thiếu cover + Ưu tiên hiển thị tab Truyện Hot có sẵn ảnh CDN thực. |
@@ -183,5 +184,39 @@ extensions/<extension_id>/
      - `search.js`: Tìm kiếm truyện theo từ khóa qua `/tim-kiem?tukhoa=`.
   2. **Kiểm thử End-to-End:** Chạy test simulation toàn diện 8 test cases đều thành công tuyệt đối.
   3. **Đóng gói & Đăng ký:** Đóng gói `plugin.zip` (39.2 KB), đăng ký vào `plugin.json` gốc với `version: 1`, commit và push lên Git remote.
+
+### [2026-09-22] Phiên 10: Phân tích & Tích hợp Nguồn Mới Tiên Hiệp Lâu (`tienhiep.vercel.app` v1)
+- **Phân tích Kiến trúc Hệ thống:**
+  1. **Nền tảng & Hosting:** Next.js App Router (React Server Components), triển khai trên Vercel Edge Network. Kho truyện chuyên sâu về tiên hiệp, tu chân, huyền huyễn kinh điển với ~440 bộ truyện chất lượng cao (~22 trang phân loại).
+  2. **Hệ thống Ảnh Bìa:** Lưu trữ trên Supabase Storage CDN định dạng WebP cực nét (`https://ebekineyghlxlpljeiww.supabase.co/storage/v1/object/public/covers/{slug}.webp`), một số lưu trữ trên Cloudflare R2 (`https://pub-...r2.dev/covers/...`).
+  3. **Kiến trúc Mục Lục & API Phân Trang:**
+     - 100 chương đầu tiên được SSR trực tiếp vào thẻ HTML của trang chi tiết `/books/{id}-{slug}`.
+     - Các trang chương tiếp theo được phân trang qua thẻ `<select>` với `<option value="{p}">Chương {start}-{end}</option>`.
+     - API nội bộ: `GET https://tienhiep.vercel.app/api/books/{id}/chapters?page={p}` trả về JSON sạch `{ "chapters": [ { id, chapter_number, title, created_at } ] }` (100 chương/request).
+     - Hỗ trợ cả 2 định dạng `bookId`: số nguyên (ví dụ: `566`, `7`) và dạng tiền tố (ví dụ: `new-207`).
+     - URL chương chuẩn: `https://tienhiep.vercel.app/books/{id}-{slug}/chapters/{chapter_number}`.
+  4. **Nội dung Đọc Truyện (Chap):**
+     - Text truyện thật 100%, render trực tiếp qua SSR thẻ `<div class="reading-prose font-serif-reading ...">` hoặc `<article>`.
+     - Cấu trúc từng đoạn văn bằng thẻ `<p>`, sạch sẽ, không mã hóa, không quảng cáo hay Traffic Gate.
+- **Giải pháp Kỹ thuật & Triển khai Extension:**
+  1. **Đầy đủ 9 scripts:**
+     - `config.js`: `BASE_URL`, `cleanUrl`, `resolveCover`, `fetchBook`, `fetchJson`, `extractBookId` (kết hợp bóc tách RSC payload và URL regex fallback), `extractBookSlug`.
+     - `home.js`: 4 tab khám phá (`Tất Cả Truyện`, `Tiên Hiệp Chọn Lọc`, `Tu Chân Giới`, `Huyền Huyễn`).
+     - `genre.js`: 11 thể loại tu chân tiên hiệp cốt lõi.
+     - `gen.js`: Parser phân trang danh sách truyện từ `/?page={p}` và `/?q={tag}&page={p}`, bóc tách sạch sẽ tên, ảnh Supabase WebP và mô tả.
+     - `detail.js`: Bóc tách tên, tác giả, cover, trạng thái (Hoàn thành / Đang ra), mảng thể loại tags và mô tả truyện.
+     - `page.js`: Tự động nhận diện `bookId` và số trang mục lục từ thẻ `<select>`, sinh mảng URL API `?page={p}&slug={slug}` cho từng khối 100 chương.
+     - `toc.js`: Parse JSON API phân trang cực nhanh và nhẹ; đồng thời trang bị fallback cào DOM HTML trực tiếp nếu API lỗi mạng.
+     - `chap.js`: Bóc tách nội dung từ `.reading-prose`, dọn dẹp tiêu đề `<h1>` lặp lại và comment React.
+     - `search.js`: Tìm kiếm truyện theo từ khóa qua `/?q={keyword}&page={p}`.
+  2. **Biểu tượng Icon:** Tạo biểu tượng Thái Cực Âm Dương (☯) mạ vàng `#D4AF37` trên nền cổ phong `#2C2825` (192x192 PNG).
+  3. **Kiểm thử Toàn diện (End-to-End Simulation):**
+     - Xây dựng test suite mô phỏng môi trường vBook runtime.
+     - 9/9 test cases pass 100% (bao gồm cả truyện ID số `566-tien-nghich` và ID tiền tố `new-207-dao-si-da-truong-kiem`).
+  4. **Đóng gói & Đăng ký:**
+     - Đóng gói `extensions/tienhiep/plugin.zip` (10.9 KB).
+     - Đăng ký extension vào `plugin.json` gốc (tổng cộng 15 extensions).
+     - Đẩy toàn bộ thay đổi lên Git remote `origin/main`.
+
 
 

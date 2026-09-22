@@ -157,6 +157,17 @@
       "description": "Đọc truyện chữ hay online chọn lọc, miễn phí trên truyenchuhay.org",
       "type": "novel",
       "locale": "vi_VN"
+    },
+    {
+      "name": "Tiên Hiệp Lâu",
+      "author": "Zitzz",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/tienhiep/plugin.zip",
+      "version": 1,
+      "source": "https://tienhiep.vercel.app",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/tienhiep/icon.png",
+      "description": "Đọc truyện tiên hiệp, tu chân, kiếm hiệp chọn lọc kinh điển trên Tiên Hiệp Lâu (tienhiep.vercel.app)",
+      "type": "novel",
+      "locale": "vi_VN"
     }
   ]
 }
