@@ -168,6 +168,17 @@
       "description": "Đọc truyện tiên hiệp, tu chân, kiếm hiệp chọn lọc kinh điển trên Tiên Hiệp Lâu (tienhiep.vercel.app)",
       "type": "novel",
       "locale": "vi_VN"
+    },
+    {
+      "name": "Hắc Hoàng Đại Đế",
+      "author": "Zitzz",
+      "path": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/hachoangdaide/plugin.zip",
+      "version": 1,
+      "source": "https://hachoangdaide.online",
+      "icon": "https://raw.githubusercontent.com/magicxlll/Z-Vbook-extensions/main/extensions/hachoangdaide/icon.png",
+      "description": "Đọc truyện online, truyện dịch AI, truyện convert chọn lọc trên Hắc Hoàng Đại Đế (hachoangdaide.online)",
+      "type": "novel",
+      "locale": "vi_VN"
     }
   ]
 }

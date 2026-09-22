@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "name": "Hắc Hoàng Đại Đế",
+    "author": "Zitzz",
+    "version": 1,
+    "source": "https://hachoangdaide.online",
+    "regexp": "https?:\\/\\/(?:www\\.)?hachoangdaide\\.online\\/.*$",
+    "description": "Đọc truyện online, truyện dịch AI, truyện convert chọn lọc trên Hắc Hoàng Đại Đế (hachoangdaide.online)",
+    "locale": "vi_VN",
+    "language": "javascript",
+    "type": "novel"
+  },
+  "script": {
+    "home": "home.js",
+    "genre": "genre.js",
+    "detail": "detail.js",
+    "page": "page.js",
+    "toc": "toc.js",
+    "chap": "chap.js",
+    "search": "search.js"
+  }
+}

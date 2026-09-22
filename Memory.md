@@ -3,7 +3,7 @@
 > **Mô tả dự án:** Kho lưu trữ và phát triển Extension (Plugin) cho ứng dụng đọc truyện & xem phim **vBook** (Android/iOS).
 > **Tác giả:** Zitzz (`magicxlll`)
 > **Tham khảo kiến trúc chuẩn:** [Darkrai9x/vbook-extensions](https://github.com/Darkrai9x/vbook-extensions.git)
-> **Cập nhật lần cuối:** 2026-09-22 (Khắc phục lỗi không add được Extension Tiên Hiệp Lâu vào vBook - POSIX Zip Packaging v2)
+> **Cập nhật lần cuối:** 2026-09-22 (Tích hợp nguồn mới Hắc Hoàng Đại Đế hachoangdaide.online v1)
 
 ---
 
@@ -58,13 +58,14 @@ extensions/<extension_id>/
 
 ---
 
-## 2. Danh mục & Tình trạng Extensions Hiện tại trong Repo (15 Extensions)
+## 2. Danh mục & Tình trạng Extensions Hiện tại trong Repo (16 Extensions)
 
 | Tên Extension | Thư mục | Loại | Phiên bản | Nguồn (Host) | Đăng ký ở `plugin.json` gốc | Tình trạng & Đánh giá |
 | :--- | :--- | :--- | :---: | :--- | :---: | :--- |
 | **AkayTruyen** | `akaytruyen` | Novel | v1 | `https://akaytruyen.com` | ✅ Có | Hoạt động tốt. Đã xử lý đảo thứ tự chương chuẩn. |
 | **Bàn Long** | `banlong` | Novel | v22 | `https://blhvip.vn` | ✅ Có | Hoạt động tốt. |
 | **Con Đường Bá Chủ** | `conduongbachu` | Novel | v4 | `https://conduongbachu.com` | ✅ Có | Hoạt động tốt. |
+| **Hắc Hoàng Đại Đế** | `hachoangdaide` | Novel | **v1** | `https://hachoangdaide.online` | ✅ Có | Laravel SuuStore CMS + JSON API mục lục 5.000 chương/req + Đọc chương qua Blade JSON.parse sạch 100%. |
 | **HHTQ Vietsub** | `hhtqvietsub` | Video | v9 | `https://hhtq.hair` | ✅ Có | Mã hóa vBook (`encrypt: true`). Hoạt hình 3D. |
 | **La Cà Truyện** | `lacatruyen` | Novel | **v4** | `https://lacatruyen.fit` | ✅ Có | Next.js SSR + API AES-256-CBC Lookup Table O(1) nhúng trực tiếp config.js siêu tốc + 4 tầng fallback mục lục. |
 | **Motchill** | `motchill` | Video | v2 | `https://motchille.tv` | ✅ Có | Mã hóa vBook (`encrypt: true`). Phim vietsub/thuyết minh. |
@@ -229,6 +230,30 @@ extensions/<extension_id>/
   3. **Chuẩn hóa URL Regexp:** Cập nhật `regexp: "https?:\\/\\/(?:www\\.)?tienhiep\\.vercel\\.app\\/.*$"` chuẩn hóa theo quy ước chung của repo.
   4. **Commit & Push:** Đẩy toàn bộ thay đổi lên Git remote `origin/main`.
 
-
-
-
+### [2026-09-22] Phiên 12: Phân tích & Tích hợp Nguồn Mới Hắc Hoàng Đại Đế (`hachoangdaide.online` v1)
+- **Phân tích Kiến trúc Hệ thống:**
+  1. **Nền tảng CMS:** Sử dụng Laravel Novel CMS (SuuStore template) với frontend kết hợp Blade SSR và Vue.js components.
+  2. **Hệ thống Ảnh Bìa:** Lưu trữ tại CDN `https://hachoangdaide.online/stories/thumbnail/{image_hash}.jpg` (hoặc `.webp`), chất lượng ảnh bìa thật 100%. Logo chính thức tại `/stories/settings/J9QPNXzJKxrVjxZI5eSorlZWj1Jb3icOJQZD1Tth.png`.
+  3. **Kiến trúc Mục Lục & API Siêu Tốc:**
+     - Phát hiện endpoint AJAX nội bộ: `GET https://hachoangdaide.online/story/get-list-chapers?story_id={id}&per_page={limit}&page=1&order_by=position&order_type=ASC`.
+     - Cho phép truyền `per_page=5000` để lấy trọn vẹn toàn bộ 100% chương (kể cả truyện 800 - 3.000+ chương) trong **1 request duy nhất** với tốc độ cực nhanh (~300ms).
+     - Hỗ trợ cờ chương thu phí / miễn phí `pay: item.money > 0`.
+  4. **Nội dung Đọc Chương (Chap):**
+     - Text truyện thật 100%, render trong Blade template dưới dạng `chaper: JSON.parse('{\u0022content\u0022:\u0022...\u0022}')`.
+     - Giải mã an toàn và sạch sẽ qua `eval("'" + match[1] + "'")` và `JSON.parse`, giữ trọn vẹn định dạng đoạn văn bản truyện.
+- **Giải pháp Kỹ thuật & Triển khai Extension:**
+  1. **Đầy đủ 9 scripts:**
+     - `config.js`: `BASE_URL`, `cleanUrl`, `resolveCover`, `fetchBook`, `fetchJson` (header AJAX), `extractStoryId`.
+     - `home.js`: 5 tab khám phá (`Truyện Hay`, `Mới Cập Nhật`, `Hoàn Thành`, `Xem Nhiều`, `Bán Chạy`).
+     - `genre.js`: 23 thể loại phong phú trích xuất từ modal categories.
+     - `gen.js`: Parser phân trang danh sách truyện `.novel-item` từ các category và tag.
+     - `detail.js`: Bóc tách tên, tác giả, cover thumbnail thực tế, trạng thái, thể loại và giới thiệu.
+     - `page.js`: Nhận diện `story_id`, gom toàn bộ mục lục về 1 trang duy nhất để tối ưu mạng.
+     - `toc.js`: Gọi API lấy 100% mục lục trong 1 request, có fallback cào DOM.
+     - `chap.js`: Giải mã văn bản chương từ Blade JSON, bóc tách hơn 14.000 ký tự sạch sẽ.
+     - `search.js`: Tìm kiếm truyện qua endpoint `/search?keyword={key}&page={p}`.
+  2. **Biểu tượng Icon:** Resize từ logo chính thức 500x500 PNG về 192x192 PNG chuẩn sắc nét.
+  3. **Đóng gói & Đăng ký:**
+     - Đóng gói `extensions/hachoangdaide/plugin.zip` (30.8 KB) bằng lệnh `tar -a -cf` đảm bảo chuẩn POSIX (`hasBackslash = false`).
+     - Đăng ký vào root `plugin.json` (tổng cộng **16 extensions**).
+     - Commit và push lên Git remote `origin/main`.
