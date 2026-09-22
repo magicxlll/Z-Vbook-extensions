@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "name": "Truyện Chữ Hay",
+    "author": "Zitzz",
+    "version": 1,
+    "source": "https://truyenchuhay.org",
+    "regexp": "(https?:\\/\\/)?(www\\.)?truyenchuhay\\.org\\/([a-zA-Z0-9_-]+)",
+    "description": "Đọc truyện chữ hay online chọn lọc, miễn phí trên truyenchuhay.org",
+    "locale": "vi_VN",
+    "language": "javascript",
+    "type": "novel"
+  },
+  "script": {
+    "home": "home.js",
+    "genre": "genre.js",
+    "detail": "detail.js",
+    "page": "page.js",
+    "toc": "toc.js",
+    "chap": "chap.js",
+    "search": "search.js"
+  }
+}

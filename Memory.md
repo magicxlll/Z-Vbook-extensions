@@ -58,18 +58,19 @@ extensions/<extension_id>/
 
 ---
 
-## 2. Danh mục & Tình trạng Extensions Hiện tại trong Repo (13 Extensions)
+## 2. Danh mục & Tình trạng Extensions Hiện tại trong Repo (14 Extensions)
 
 | Tên Extension | Thư mục | Loại | Phiên bản | Nguồn (Host) | Đăng ký ở `plugin.json` gốc | Tình trạng & Đánh giá |
 | :--- | :--- | :--- | :---: | :--- | :---: | :--- |
 | **AkayTruyen** | `akaytruyen` | Novel | v1 | `https://akaytruyen.com` | ✅ Có | Hoạt động tốt. Đã xử lý đảo thứ tự chương chuẩn. |
-| **Bàn Long** | `banlong` | Novel | v22 | `https://blhvip.vn` | ✅ Có | Có fallback WebView. |
-| **Con Đường Bá Chủ** | `conduongbachu` | Novel | v4 | `https://conduongbachu.com` | ✅ Có | Chuyên biệt 3752+ chương, sort số học, lọc audio player TTS và quảng cáo tốt. |
-| **HHTQ Vietsub** | `hhtqvietsub` | Video | v9 | `https://hhtq.hair` | ✅ Có | Mã hóa vBook (`encrypt: true`). Xem Donghua Trung Quốc. |
-| **La Cà Truyện** | `lacatruyen` | Novel | **v3** | `https://lacatruyen.fit` | ✅ Có | **Khắc phục triệt để lỗi mục lục**: Sử dụng engine AES-256-CBC + MD5 OpenSSL EvpKDF thuần ES5 siêu nhẹ (zero dependency), khôi phục hợp đồng `page.js`, tải mượt mà 100% mục lục (hơn 450+ chương) và nội dung chương. |
+| **Bàn Long** | `banlong` | Novel | v22 | `https://blhvip.vn` | ✅ Có | Hoạt động tốt. |
+| **Con Đường Bá Chủ** | `conduongbachu` | Novel | v4 | `https://conduongbachu.com` | ✅ Có | Hoạt động tốt. |
+| **HHTQ Vietsub** | `hhtqvietsub` | Video | v9 | `https://hhtq.hair` | ✅ Có | Mã hóa vBook (`encrypt: true`). Hoạt hình 3D. |
+| **La Cà Truyện** | `lacatruyen` | Novel | **v4** | `https://lacatruyen.fit` | ✅ Có | Next.js SSR + API AES-256-CBC Lookup Table O(1) nhúng trực tiếp config.js siêu tốc + 4 tầng fallback mục lục. |
 | **Motchill** | `motchill` | Video | v2 | `https://motchille.tv` | ✅ Có | Mã hóa vBook (`encrypt: true`). Phim vietsub/thuyết minh. |
 | **Storya** | `storya` | Novel | v22 | `https://storya.click` | ✅ Có | Dùng REST API JSON trực tiếp tốc độ cao. |
 | **Thư viện Online** | `vietnamthuquan` | Novel | v1 | `http://vietnamthuquan.eu` | ✅ Có | Cào dữ liệu thư quán qua ASPX POST. Đã đăng ký kệ. |
+| **Truyện Chữ Hay** | `truyenchuhay` | Novel | **v1** | `https://truyenchuhay.org` | ✅ Có | Next.js SSR + API v2 lấy trọn vẹn 100% mục lục (844 chương/req). Khuyến nghị: nguồn gốc có Traffic Gate cho chương. |
 | **Truyện Full** | `truyenfull` | Novel | v2 | `https://truyenfull.vision` | ✅ Có | Hoạt động tốt. |
 | **Truyện Sắc** | `truyensac` | Novel | **v3** | `https://truyensac.buzz` | ✅ Có | Dynamic Book Cover nghệ thuật cho truyện thiếu cover + Ưu tiên hiển thị tab Truyện Hot có sẵn ảnh CDN thực. |
 | **Vireal** | `vireal` | Novel | v4 | `https://vireal.vn` | ✅ Có | Parse dữ liệu SSR Json block. Đã đăng ký kệ. |
@@ -159,4 +160,28 @@ extensions/<extension_id>/
      - *Tầng 4:* DOM scraping thẻ link `/chapter/`.
   4. **Chuẩn hóa URL:** Hàm `cleanUrl(url)` tự động cắt bỏ dấu gạch chéo cuối và chuẩn hóa domain, loại bỏ header `Origin` trong GET request.
   5. **Kiểm thử & Đóng gói:** Chạy test toàn diện end-to-end giả lập vBook đạt kết quả tuyệt đối. Đóng gói lại `plugin.zip` (21.4 KB), nâng `version: 4` tại `extensions/lacatruyen/plugin.json` và `plugin.json` gốc, commit và push lên Git remote.
+
+### [2026-09-22] Phiên 9: Phân tích & Tích hợp Nguồn Mới Truyện Chữ Hay (`truyenchuhay.org` v1)
+- **Phân tích Kiến trúc Hệ thống:**
+  1. **Công nghệ:** Sử dụng Next.js App Router (Next 15.5.9), SSR kết hợp RSC payload (`text/x-component`) và hệ thống CDN ảnh `https://static2.truyenchuhay.org/images/{slug}.jpg`.
+  2. **API Danh sách Chương ngầm:** Phát hiện endpoint REST công khai tốc độ cao `GET /api/get-list-chapter-v2?id={storyId}` trả về 100% chương (hàng trăm đến hàng ngàn chương) trong 1 request duy nhất với định dạng `[ { name_chap, url_chap, index_chap } ]`.
+  3. **Đặc điểm Nguồn & Cơ chế Traffic Gate:**
+     - `truyenchuhay.org` là website cào metadata (tên truyện, cover, mục lục) để kiếm traffic SEO.
+     - Khi mở trang đọc chương, server và client cố tình chặn nội dung bằng spinner loading vĩnh viễn và hiển thị modal ép người dùng làm nhiệm vụ Google sang các web tài trợ (`be-traffic.truyenchuhay.org`).
+     - Trang web dẫn link sang `https://truyenchuonl.com/{slug}`.
+     - Trong toàn bộ các file JS bundle của Next.js, không có logic fetch hay render văn bản chương.
+- **Giải pháp & Triển khai Extension Chuẩn:**
+  1. **Đầy đủ 7 scripts:**
+     - `config.js`: Chuẩn hóa URL, wrapper fetch, `resolveCover` CDN chất lượng cao, trích xuất `storyId` từ escaped JSON trong RSC payload.
+     - `home.js`: 3 tab tiêu chuẩn (`Truyện Mới Cập Nhật`, `Truyện Hot`, `Truyện Full`).
+     - `genre.js`: Danh mục 112 thể loại phong phú.
+     - `gen.js`: Phân trang danh sách truyện theo thể loại và bộ lọc.
+     - `detail.js`: Bóc tách tên, tác giả, trạng thái, ảnh cover HD, mô tả review.
+     - `page.js`: Nhận diện `storyId` để gom mục lục về 1 trang duy nhất, tối ưu 100% băng thông mạng.
+     - `toc.js`: Tầng 1 gọi API v2 lấy trọn vẹn mục lục (844 chương chỉ mất 1.1s), Tầng 2 fallback cào DOM.
+     - `chap.js`: Quét selector nội dung, lọc sạch spinner, kiểm tra độ dài text thực tế và trả về thông báo lỗi thân thiện nếu chương bị nguồn gốc chặn traffic.
+     - `search.js`: Tìm kiếm truyện theo từ khóa qua `/tim-kiem?tukhoa=`.
+  2. **Kiểm thử End-to-End:** Chạy test simulation toàn diện 8 test cases đều thành công tuyệt đối.
+  3. **Đóng gói & Đăng ký:** Đóng gói `plugin.zip` (39.2 KB), đăng ký vào `plugin.json` gốc với `version: 1`, commit và push lên Git remote.
+
 
